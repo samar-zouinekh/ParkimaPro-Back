@@ -6,6 +6,10 @@
     },
     "servers": [
         {
+            "url": "https://demo.pro.bmoov.co",
+            "description": "Preprod development server."
+        },
+        {
             "url": "http://demo.pro.bmoov.test",
             "description": " server"
         }
@@ -107,25 +111,13 @@
                             "schema": {
                                 "required": [
                                     "phone",
-                                    "otp",
-                                    "action",
-                                    "device_token",
-                                    "os"
+                                    "otp"
                                 ],
                                 "properties": {
                                     "phone": {
                                         "type": "integer"
                                     },
                                     "otp": {
-                                        "type": "integer"
-                                    },
-                                    "action": {
-                                        "type": "integer"
-                                    },
-                                    "device_token": {
-                                        "type": "integer"
-                                    },
-                                    "os": {
                                         "type": "integer"
                                     }
                                 },
@@ -148,6 +140,60 @@
                         }
                     }
                 }
+            }
+        },
+        "/api/entryTicket/create": {
+            "get": {
+                "tags": [
+                    "Ticket Classification"
+                ],
+                "summary": "Create Postpayment Ticket",
+                "operationId": "createTicket",
+                "parameters": [
+                    {
+                        "name": "parking_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "operator_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Create entry ticket",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "parking_id": 0,
+                                        "ticket_id": "string",
+                                        "license_plate": "string",
+                                        "ticket_entry_time": "string",
+                                        "ticket_tariff_time": "string",
+                                        "ticket_duration": "string",
+                                        "original_amount": 0,
+                                        "discount_amount": 0,
+                                        "ticket_amount": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },

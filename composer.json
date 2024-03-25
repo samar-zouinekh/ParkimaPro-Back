@@ -13,6 +13,7 @@
         "laravel/passport": "^10.4",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "medianet-dev/p-connector": "^1.7",
         "stancl/tenancy": "^3.6"
     },
     "require-dev": {

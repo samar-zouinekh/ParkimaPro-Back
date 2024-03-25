@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4ff330e986fd9c14eb2f409b5e1f810",
+    "content-hash": "4a2c9e3ff08a80d3d52d1a6adf659d33",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2593,6 +2593,71 @@
                 }
             ],
             "time": "2021-06-28T04:27:21+00:00"
+        },
+        {
+            "name": "medianet-dev/p-connector",
+            "version": "1.7.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Medianet-Tunisia/p-connector.git",
+                "reference": "8fcc44b7c51ee09ff2f2637fafbceb4e2b2caef3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Medianet-Tunisia/p-connector/zipball/8fcc44b7c51ee09ff2f2637fafbceb4e2b2caef3",
+                "reference": "8fcc44b7c51ee09ff2f2637fafbceb4e2b2caef3",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.1",
+                "illuminate/support": "^7.0|^8.0|^9.0|^10.0",
+                "php": "^7.2.5|^7.3|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^5.7|^6.0",
+                "phpunit/phpunit": "^8.5.8|^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "MedianetDev\\PConnector\\PConnectorServiceProvider"
+                    ],
+                    "aliases": {
+                        "PConnector": "MedianetDev\\PConnector\\Facade\\PConnector"
+                    }
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "MedianetDev\\PConnector\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Soufiene Slimi",
+                    "email": "soufiene.slimi@medianet.com.tn",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Link projects together with restful apis",
+            "homepage": "https://github.com/medianet-dev/p-connector",
+            "keywords": [
+                "medianet-dev",
+                "p-connector"
+            ],
+            "support": {
+                "issues": "https://github.com/Medianet-Tunisia/p-connector/issues",
+                "source": "https://github.com/Medianet-Tunisia/p-connector/tree/1.7.5"
+            },
+            "time": "2024-02-27T11:53:16+00:00"
         },
         {
             "name": "monolog/monolog",
