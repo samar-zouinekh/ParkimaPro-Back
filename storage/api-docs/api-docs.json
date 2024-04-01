@@ -6,10 +6,6 @@
     },
     "servers": [
         {
-            "url": "https://demo.pro.bmoov.co",
-            "description": "Preprod development server."
-        },
-        {
             "url": "http://demo.pro.bmoov.test",
             "description": " server"
         }
@@ -157,13 +153,59 @@
                         "schema": {
                             "type": "integer"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Create entry ticket",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "parking_id": 0,
+                                    "ticket_id": "string",
+                                    "entry_datetime": "string",
+                                    "barcode_data": "string",
+                                    "qrcode_data": "string"
+                                }
+                            }
+                        }
                     },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
                     {
-                        "name": "operator_id",
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ticket/consult": {
+            "get": {
+                "tags": [
+                    "Ticket Classification"
+                ],
+                "summary": "Create Postpayment Ticket",
+                "operationId": "consultTicket",
+                "parameters": [
+                    {
+                        "name": "parking_id",
                         "in": "query",
                         "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "barcode",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],
@@ -173,20 +215,24 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "example": {
-                                        "parking_id": 0,
-                                        "ticket_id": "string",
-                                        "license_plate": "string",
-                                        "ticket_entry_time": "string",
-                                        "ticket_tariff_time": "string",
-                                        "ticket_duration": "string",
-                                        "original_amount": 0,
-                                        "discount_amount": 0,
-                                        "ticket_amount": 0
-                                    }
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "parking_id": 0,
+                                    "ticket_id": "string",
+                                    "license_plate": "string",
+                                    "ticket_entry_time": "string",
+                                    "ticket_tariff_time": "string",
+                                    "ticket_duration": "string",
+                                    "original_amount": 0,
+                                    "discount_amount": 0,
+                                    "ticket_amount": 0
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
                     }
                 },
                 "security": [

@@ -25,7 +25,6 @@ class TicketRequest extends FormRequest
     {
         return [
             'parking_id' => 'required',
-            'operator_id' => 'required'
         ];
     }
 }

@@ -16,12 +16,6 @@ use App\Http\Controllers\LoginController;
 */
 
 
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-   dd("i have token");
-});
-
-
 // phone auth
 Route::post('check/password',  [LoginController::class, 'checkPassword'])->withoutMiddleware(['auth:api']);
 
@@ -30,16 +24,11 @@ Route::put('phone-auth/verification',  [LoginController::class, 'phoneVerificati
 Route::put('phone-auth/verify',  [LoginController::class, 'phoneVerify'])->withoutMiddleware(['auth:api']);
 
 
-// Route::middleware('throttle:api')->group(function () {
-//     Route::get('/user', function (Request $request) {
-//         dd("I have access token");
-//     });    
-// });
-
 Route::middleware('auth:api')->group(function () {
     // Protected routes
    
     Route::get('entryTicket/create',  [TicketController::class, 'entryTicket']);
+    Route::get('ticket/consult',  [TicketController::class, 'consultTicket']);
 
 });
 
