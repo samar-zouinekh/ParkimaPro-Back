@@ -8,7 +8,12 @@
         {
             "url": "http://demo.pro.bmoov.test",
             "description": " server"
+        },
+        {
+            "url": "https://demo.pro.bmoov.co",
+            "description": " server"
         }
+
     ],
     "paths": {
         "/api/check/password": {

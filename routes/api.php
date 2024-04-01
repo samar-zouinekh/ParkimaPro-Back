@@ -20,7 +20,7 @@ use App\Http\Controllers\LoginController;
 Route::post('check/password',  [LoginController::class, 'checkPassword'])->withoutMiddleware(['auth:api']);
 
 // phone auth
-Route::put('phone-auth/verification',  [LoginController::class, 'phoneVerification'])->withoutMiddleware(['auth:api'])->name('login');
+Route::put('phone-auth/verification',  [LoginController::class, 'phoneVerification'])->withoutMiddleware(['auth:api']);
 Route::put('phone-auth/verify',  [LoginController::class, 'phoneVerify'])->withoutMiddleware(['auth:api']);
 
 
