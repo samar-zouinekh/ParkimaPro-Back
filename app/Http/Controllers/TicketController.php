@@ -11,21 +11,13 @@ use DateTimeZone;
 class TicketController extends Controller
 {
 
-    // /**
-    //  * @OA\SecurityScheme(
-    //  *     securityScheme="bearerAuth",
-    //  *     type="http",
-    //  *     scheme="bearer",
-    //  *     bearerFormat="JWT"
-    //  * )
-    //  */
-    
+  
     /**
      * @OA\Get(
      *      path="/api/entryTicket/create",
      *      operationId="createTicket",
      *      tags={"Ticket Classification"},
-     *     security={{"bearerAuth": {}}},
+     *      security={{"bearerAuth": {}}},
      *      summary="Create Postpayment Ticket",
      *      @OA\Parameter(
      *          name="parking_id",

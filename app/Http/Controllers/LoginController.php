@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
-   // Add this to API that need access token
-// security={{"bearerAuth":{}}},
 
     /**
      *   @OA\Post(

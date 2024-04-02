@@ -9,26 +9,26 @@ use Illuminate\Routing\Controller as BaseController;
 
 
 /**
-    * @OA\Info(
-    *     title="ParkimaPro API",
-    *     version="0.1",
-    * ),
-    * 
+ * @OA\Info(
+ *     title="ParkimaPro API",
+ *     version="0.1"
+ * )
+ * 
  * @OA\SecurityScheme(
-     * type="http",
-     * description="Authentication Bearer Token",
-     * name="Authentication Bearer Token",
-     * in="header",
-     * scheme="bearer",
-     * bearerFormat="JWT",
-     * securityScheme="apiAuth",
-     * ),
-     * @OA\Server(
-     *     url="http://demo.pro.bmoov.test",
-     *     description=" server",
-     * )
-
-*/
+ *     type="http",
+ *     description="Authentication Bearer Token",
+ *     name="Authorization",
+ *     in="header",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     securityScheme="bearerAuth" 
+ * )
+ * 
+ * @OA\Server(
+ *     url="http://demo.pro.bmoov.test",
+ *     description="Server"
+ * )
+ */
 
 class Controller extends BaseController
 {
