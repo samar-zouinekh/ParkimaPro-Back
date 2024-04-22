@@ -258,6 +258,17 @@ class LoginController extends Controller
                 ];
             }
 
+
+            $parking = app('db')->select(
+                'SELECT parkings.id, parkings.name, parkings.parking_image, parkings.adress
+        from parkings
+        JOIN agent_parking ON parkings.id = agent_parking.parking_id
+        JOIN admins ON agent_parking.agent_id = admins.id
+        WHERE admins.id = ? limit 1',
+                [$agent[0]->id]
+            );
+
+
             $parkingType = app('db')->select(
                 'SELECT gateways.parking_type
                     from gateways
@@ -289,6 +300,10 @@ class LoginController extends Controller
                 'email' => $agent[0]->email,
                 'action' => 'login',
                 'parking_type' => $parkingType[0]->parking_type,
+                'parking_id' => $parking[0]->id,
+                'parking_name' => $parking[0]->name,
+                'parking_image' => $parking[0]->parking_image,
+                'parking_adress' => $parking[0]->adress,
                 'permissions' => $permissionsList,
 
             ];
@@ -315,5 +330,4 @@ class LoginController extends Controller
             'message' => "Invalid OTP."
         ];
     }
-
 }
