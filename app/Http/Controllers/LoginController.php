@@ -260,7 +260,7 @@ class LoginController extends Controller
 
 
             $parking = app('db')->select(
-                'SELECT parkings.id, parkings.name, parkings.parking_image, parkings.adress
+                'SELECT parkings.id, parkings.name, parkings.parking_image, parkings.address
         from parkings
         JOIN agent_parking ON parkings.id = agent_parking.parking_id
         JOIN admins ON agent_parking.agent_id = admins.id
