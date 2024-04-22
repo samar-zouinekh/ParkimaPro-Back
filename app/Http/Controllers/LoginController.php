@@ -303,7 +303,7 @@ class LoginController extends Controller
                 'parking_id' => $parking[0]->id,
                 'parking_name' => $parking[0]->name,
                 'parking_image' => $parking[0]->parking_image,
-                'parking_adress' => $parking[0]->adress,
+                'parking_adress' => $parking[0]->address,
                 'permissions' => $permissionsList,
 
             ];
