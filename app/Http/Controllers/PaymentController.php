@@ -74,7 +74,7 @@ class PaymentController extends Controller
 
                     $gateway_shift = app('p-connector')->profile('ugateway');
                     $gateway_shift->get('shift', $dataShift);
-
+dd($gateway_shift);
                     if ($gateway_shift->responseCodeNot(200)) {
                         return response()->json([
                             'message' => trans_db('validation', 'payment_ugateway_down'),
@@ -98,8 +98,10 @@ class PaymentController extends Controller
                     $promotion_id = null;
                     $ticket_type =  'Parkimapro_ticket';
                     $ticket_value = $request->ticket_value;
+
 $duration = CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
 ->locale(app()->getLocale())->forHumans(['parts' => 4, 'join' => true]);
+
                     $transaction_data = [
                         'tenant' => tenant()->id,
                         'parking' => $request->parking_id,
@@ -201,10 +203,17 @@ $duration = CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
                 'responseCode' =>  200,
                 'message' => "payment done successfully."
             ];
+
         } catch (\Throwable $th) {
+
             app('log')->error($th->getMessage());
 
-            return response()->json(['message' => 'Server error'], 500);
+            return [
+                'error' =>  [],
+                'status' =>  false,
+                'responseCode' =>  500,
+                'message' => "Server error."
+            ];
         }
     }
 
