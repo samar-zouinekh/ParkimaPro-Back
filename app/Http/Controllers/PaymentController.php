@@ -74,7 +74,7 @@ class PaymentController extends Controller
 
                     $gateway_shift = app('p-connector')->profile('ugateway');
                     $gateway_shift->get('shift', $dataShift);
-dd($gateway_shift);
+
                     if ($gateway_shift->responseCodeNot(200)) {
                         return response()->json([
                             'message' => trans_db('validation', 'payment_ugateway_down'),
