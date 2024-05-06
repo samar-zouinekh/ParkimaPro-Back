@@ -4,6 +4,8 @@ use App\Http\Controllers\TicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PaymentController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,7 +31,8 @@ Route::middleware('auth:api')->group(function () {
    
     Route::get('entryTicket/create',  [TicketController::class, 'entryTicket']);
     Route::get('ticket/consult',  [TicketController::class, 'consultTicket']);
+    
+    Route::get('payment/options',  [PaymentController::class, 'options']);
+    Route::post('payment',  [PaymentController::class, 'payment']);
 
 });
-
-

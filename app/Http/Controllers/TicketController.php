@@ -174,10 +174,14 @@ class TicketController extends Controller
             $ugateway->get('media/postPayment/consult', $data);
 
             if ($ugateway->responseCodeNot(200)) {
-                return response()->json([
-                    'message' => 'ugateway_down',
-                    'success' => false,
-                ], 200);
+
+                return [
+                    'error' =>  [],
+                    'status' =>  false,
+                    'responseCode' =>  200,
+                    'message' => "ugateway down: wrong or missing data."
+                ];
+
             }
 
             if ($ugateway->getResponseStatusCode() == 400) {
