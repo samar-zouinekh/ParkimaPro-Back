@@ -41,7 +41,7 @@ class PaymentController extends Controller
 
         try {
 
-            // get the parking_id and operator_id ready to be sent to entervo
+            // get the parking_id and operator_id ready
             $result = app('db')->select(
                 'select parkings.paid_grace_period, gateways.shift_id, gateways.parking_type, gateways.type, gateways.cashier_contract_id, gateways.cashier_consumer_id, gateways.shift_sub_user,  parkings.promotion_id, currencies.round, currencies.fractional_part, currencies.symbol, currencies.code, gateways.parking_id, gateways.timezone_offset, operators.operator_id
             from parkings, gateways, operators, currencies
@@ -77,7 +77,7 @@ class PaymentController extends Controller
 
                     if ($gateway_shift->responseCodeNot(200)) {
                         return response()->json([
-                            'message' => trans_db('validation', 'payment_ugateway_down'),
+                            'message' => trans_db('validation', 'missing shift ID'),
                             'success' => false,
                         ], 200);
                     }
@@ -93,14 +93,13 @@ class PaymentController extends Controller
                             'success' => false,
                         ], 200);
                     }
-
                     $tariff_class = null;
                     $promotion_id = null;
                     $ticket_type =  'Parkimapro_ticket';
                     $ticket_value = $request->ticket_value;
 
-$duration = CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
-->locale(app()->getLocale())->forHumans(['parts' => 4, 'join' => true]);
+                    $duration = CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
+                        ->locale(app()->getLocale())->forHumans(['parts' => 4, 'join' => true]);
 
                     $transaction_data = [
                         'tenant' => tenant()->id,
@@ -114,6 +113,7 @@ $duration = CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
                         'client' => $request->get('client', '[]'),
                         'product' => json_encode([
                             'parking_id' => $request->parking_id,
+                            'shift_id' => $gateway_shift->shift_id,
                             'license_plate' => $request->license_plate,
                             'phone_number' => $request->phone_number,
                             'type' => $ticket_type,
@@ -132,8 +132,7 @@ $duration = CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
                         'payment_type' => $payment_type,
                     ];
 
-                    // dd(CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
-                    // ->locale(app()->getLocale())->forHumans(['parts' => 4, 'join' => true]));
+                    // dd($transaction_data);
 
                     $originalDatetime = Carbon::createFromFormat('YmdHis', $ugateway->ticket_entry_time);
                     $ticket_entry_time = $originalDatetime->format('Y-m-d H:i:s');
@@ -188,7 +187,7 @@ $duration = CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
             $result = [
                 'parking_id' => (int)$result[0]->parking_id,
                 'ticket_id' => $request->ticket_id,
-                'entry_datetime' =>  (new DateTime($ugateway->ticket_entry_time))->format(locale_datetime_format()),
+                'entry_datetime' => (new DateTime($ugateway->ticket_entry_time))->format(locale_datetime_format()),
                 'payment_datetime' => (new DateTime(
                     'now',
                     new DateTimeZone($result[0]->timezone_offset ?? 'UTC')
@@ -203,7 +202,6 @@ $duration = CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
                 'responseCode' =>  200,
                 'message' => "payment done successfully."
             ];
-
         } catch (\Throwable $th) {
 
             app('log')->error($th->getMessage());

@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ShiftController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,4 +36,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('payment/options',  [PaymentController::class, 'options']);
     Route::post('payment',  [PaymentController::class, 'payment']);
 
+    Route::post('open/shift',  [ShiftController::class, 'openShift']);
+    Route::post('close/shift',  [ShiftController::class, 'closeShift']);
 });
