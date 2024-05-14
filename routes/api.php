@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CountingController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,7 +19,6 @@ use App\Http\Controllers\ShiftController;
 |
 */
 
-
 // phone auth
 Route::post('check/password',  [LoginController::class, 'checkPassword'])->withoutMiddleware(['auth:api']);
 
@@ -26,9 +26,7 @@ Route::post('check/password',  [LoginController::class, 'checkPassword'])->witho
 Route::put('phone-auth/verification',  [LoginController::class, 'phoneVerification'])->withoutMiddleware(['auth:api']);
 Route::put('phone-auth/verify',  [LoginController::class, 'phoneVerify'])->withoutMiddleware(['auth:api']);
 
-
 Route::middleware('auth:api')->group(function () {
-    // Protected routes
    
     Route::get('entryTicket/create',  [TicketController::class, 'entryTicket']);
     Route::get('ticket/consult',  [TicketController::class, 'consultTicket']);
@@ -36,6 +34,11 @@ Route::middleware('auth:api')->group(function () {
     Route::get('payment/options',  [PaymentController::class, 'options']);
     Route::post('payment',  [PaymentController::class, 'payment']);
 
+    Route::post('check/shift',  [ShiftController::class, 'checkShift']);
     Route::post('open/shift',  [ShiftController::class, 'openShift']);
     Route::post('close/shift',  [ShiftController::class, 'closeShift']);
+
+    Route::get('get/counting',  [CountingController::class, 'getCounting']);
+    Route::post('edit/counting',  [CountingController::class, 'editCounting']);
+
 });

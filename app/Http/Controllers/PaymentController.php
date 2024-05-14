@@ -82,7 +82,7 @@ class PaymentController extends Controller
                         ], 200);
                     }
 
-                    /** @var \MedianetDev\PConnector\PConnector $payment */
+                    /** @var \MedianetDev\PConnector\PConnector $ugateway */
 
                     $ugateway = app('p-connector')->profile('ugateway');
                     $ugateway->get('media/postPayment/consult', $data);
@@ -156,7 +156,7 @@ class PaymentController extends Controller
                     ];
 
 
-                    /** @var \MedianetDev\PConnector\PConnector $payment */
+                    /** @var \MedianetDev\PConnector\PConnector $ugateway */
 
                     $ugateway = app('p-connector')->profile('ugateway');
                     $ugateway->post('postPayment', $gateway_data)->getResponseStatusCode();
@@ -166,7 +166,24 @@ class PaymentController extends Controller
                         $ugateway->log();
                     } else {
                         BmoovController::updateTransaction($request->ticket_id, 'booked', (int)$result[0]->shift_id);
+
+                        $counting_data = [
+                            'operator_id' => (int)$result[0]->operator_id,
+                            'parking_id' => (int)$result[0]->parking_id,
+                        ];
+
+                        /** @var \MedianetDev\PConnector\PConnector $ugateway */
+                        $ugateway_counting = app('p-connector')->profile('ugateway');
+                        $ugateway_counting->put('decrement/counting', $counting_data);
+
+                        if ($ugateway_counting->responseCodeNot(200)) {
+                            return response()->json([
+                                'message' => trans_db('validation', 'counting_ugateway_down'),
+                                'success' => false,
+                            ], 200);
+                        }
                     }
+                    
                 } else {
                     return [
                         'error' =>  [],

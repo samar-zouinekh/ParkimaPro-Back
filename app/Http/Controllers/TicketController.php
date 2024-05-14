@@ -11,7 +11,7 @@ use DateTimeZone;
 class TicketController extends Controller
 {
 
-  
+
     /**
      * @OA\Get(
      *      path="/api/entryTicket/create",
@@ -58,27 +58,27 @@ class TicketController extends Controller
                 and parkings.id = ? limit 1',
                 [$request->parking_id]
             );
-
             $data = [
                 'operator_id' => $result[0]->operator_id,
                 'parking_id' => $result[0]->parking_id,
             ];
-
+            
             $ugateway = app('p-connector')->profile('ugateway');
             $ugateway->get('entryTicket/create', $data);
-
+            
             if ($ugateway->responseCodeNot(200)) {
                 return response()->json([
                     'message' => 'ugateway_down',
                     'success' => false,
                 ], 200);
             }
+           
 
             if ($ugateway->getResponseStatusCode() == 400) {
                 return 'invalid_ticket';
             }
 
-            $result = [
+            $ticket = [
                 'parking_id' => $ugateway->parking_id,
                 'ticket_id' => $ugateway->ticket_id,
                 'entry_datetime' => (new DateTime($ugateway->entry_time))->format(locale_datetime_format()),
@@ -86,12 +86,30 @@ class TicketController extends Controller
                 'qrcode_data' => $ugateway->qrcode_data,
 
             ];
+
+            $counting_data = [
+                'operator_id' => (int)$result[0]->operator_id,
+                'parking_id' => (int)$result[0]->parking_id,
+            ];
+         
+            /** @var \MedianetDev\PConnector\PConnector $ugateway */
+            $ugateway_counting = app('p-connector')->profile('ugateway');
+            $ugateway_counting->put('increment/counting', $counting_data);
+
+            if ($ugateway_counting->responseCodeNot(200)) {
+                return response()->json([
+                    'message' => trans_db('validation', 'counting_ugateway_down'),
+                    'success' => false,
+                ], 200);
+            }
+
             return [
-                'data' =>  $result,
+                'data' =>  $ticket,
                 'status' =>  true,
                 'responseCode' =>  200,
                 'message' => "Entry ticket created successfully."
             ];
+
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
 
@@ -181,7 +199,6 @@ class TicketController extends Controller
                     'responseCode' =>  200,
                     'message' => "ugateway down: wrong or missing data."
                 ];
-
             }
 
             if ($ugateway->getResponseStatusCode() == 400) {
