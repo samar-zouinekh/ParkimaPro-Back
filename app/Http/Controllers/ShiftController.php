@@ -166,6 +166,18 @@ class ShiftController extends Controller
                             'total_amount' => ($total_revenue + $request->starting_amount)
                         ];
 
+                        $open_shift = app('p-connector')->profile('ugateway');
+                        $open_shift->post('shift/open', $dataShift);
+
+                        if ($open_shift->responseCodeNot(200)) {
+                            return [
+                                'error' =>  [],
+                                'status' =>  false,
+                                'responseCode' =>  500,
+                                'message' => "opening shift failed, check gateway."
+                            ];
+                        }
+
                         return [
                             'data' =>  [$shift_report],
                             'status' =>  true,
