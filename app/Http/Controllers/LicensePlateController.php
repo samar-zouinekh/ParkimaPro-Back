@@ -36,8 +36,8 @@ $product= [];
 
 foreach($transaction as $item)
 {
-dd($item);
-  $productData = json_decode($item['product'], true);
+// dd($item);
+  $productData = json_decode($item->product, true);
     dump(array_push( $product ,[
         "parkingId" => $productData['parking_id'],
         "licensePlate" => $productData['license_plate'],
