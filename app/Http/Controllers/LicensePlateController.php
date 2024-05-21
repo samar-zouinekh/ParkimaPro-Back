@@ -11,7 +11,7 @@ class LicensePlateController extends Controller
 {
     public function getPlateList(LicensePlateRequest $request)
     {
-        try {
+        // try {
             // get the parking_id and operator_id ready
             $result = app('db')->select(
                 'select gateways.shift_id, gateways.parking_type, gateways.type, gateways.cashier_contract_id, gateways.cashier_consumer_id, gateways.shift_sub_user, gateways.parking_id, gateways.timezone_offset, operators.operator_id
@@ -51,16 +51,16 @@ dd($item['product']);
       
         
 
-        } catch (\Throwable $th) {
+        // } catch (\Throwable $th) {
 
-            app('log')->error($th->getMessage());
+        //     app('log')->error($th->getMessage());
 
-            return [
-                'error' =>  [],
-                'status' =>  false,
-                'responseCode' =>  500,
-                'message' => "Server error."
-            ];
-        }
+        //     return [
+        //         'error' =>  [],
+        //         'status' =>  false,
+        //         'responseCode' =>  500,
+        //         'message' => "Server error."
+        //     ];
+        // }
     }
 }
