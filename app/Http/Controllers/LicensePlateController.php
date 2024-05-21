@@ -30,6 +30,9 @@ class LicensePlateController extends Controller
                 [$request->parking_id]
             );
 
+            return  $transaction;
+
+
 // Initialize a new Laravel collection
 $collection = collect($transaction);
 
