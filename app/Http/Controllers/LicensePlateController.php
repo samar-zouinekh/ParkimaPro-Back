@@ -30,7 +30,7 @@ class LicensePlateController extends Controller
                 [$request->parking_id]
             );
 
-            // return  $transaction;
+            return  $transaction;
 
 $product= [];
 
