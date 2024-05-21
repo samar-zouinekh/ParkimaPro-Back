@@ -29,27 +29,26 @@ class LicensePlateController extends Controller
             and transactions.updated_at >= NOW() - INTERVAL 1 DAY ',
                 [$request->parking_id]
             );
-            
-            // dd($transaction);
 
-    // Initialize a new Laravel collection
-    $collection = collect();
 
-    // Loop through each object in the response array
-    foreach ($transaction as $obj) {
-        // Parse the JSON string in the 'product' field
-        $productData = json_decode($obj["product"], true);
+   // Initialize a new Laravel collection
+   $collection = collect();
 
-        // Loop through each key-value pair in the parsed data
-        foreach ($productData as $key => $value) {
-            // If the key does not exist in the collection, initialize it with an empty array
-            if (!$collection->has($key)) {
-                $collection->put($key, []);
-            }
-            // Append the ID of the object to the array associated with the key
-            $collection->get($key)[] = $value;
-        }
-    }
+   // Loop through each object in the response array
+   foreach ($transaction as $obj) {
+       // Parse the JSON string in the 'product' field
+       $productData = json_decode($obj["product"], true); // Ensure decoding as an associative array
+
+       // Loop through each key-value pair in the parsed data
+       foreach ($productData as $key => $value) {
+           // If the key does not exist in the collection, initialize it with an empty array
+           if (!$collection->has($key)) {
+               $collection->put($key, []);
+           }
+           // Append the ID of the object to the array associated with the key
+           $collection->get($key)[] = $value;
+       }
+   }
 
     dd($collection);
 
