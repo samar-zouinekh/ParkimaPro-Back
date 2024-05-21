@@ -30,14 +30,14 @@ class LicensePlateController extends Controller
                 [$request->parking_id]
             );
 
-            return  $transaction;
+            // return  $transaction;
 
 $product= [];
 
 foreach($transaction as $item)
 
  { $productData = json_decode($item['product'], true);
-
+dd($productData);
     dump(array_push( $product ,[
         "parkingId" => $productData['parking_id'],
         "licensePlate" => $productData['license_plate'],
