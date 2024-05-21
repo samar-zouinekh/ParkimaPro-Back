@@ -30,30 +30,39 @@ class LicensePlateController extends Controller
                 [$request->parking_id]
             );
 
-            return [
-                'data' =>  $transaction,
-                'status' =>  true,
-                'responseCode' =>  200,
-                'message' => "true."
-            ];
-   // Initialize a new Laravel collection
-   $collection = collect();
+            // return [
+            //     'data' =>  $transaction,
+            //     'status' =>  true,
+            //     'responseCode' =>  200,
+            //     'message' => "true."
+            // ];
+            
+    // Initialize a new Laravel collection
+    $collection = collect();
 
-   // Loop through each object in the response array
-   foreach ($transaction as $obj) {
-       // Parse the JSON string in the 'product' field
-       $productData = json_decode($obj["product"], true); // Ensure decoding as an associative array
+    // Loop through each object in the response array
+    foreach ($transaction as $obj) {
+        // Ensure we are handling array correctly
+        if (is_array($obj) && isset($obj['product'])) {
+            // Parse the JSON string in the 'product' field
+            $productData = json_decode($obj['product'], true); // Ensure decoding as an associative array
 
-       // Loop through each key-value pair in the parsed data
-       foreach ($productData as $key => $value) {
-           // If the key does not exist in the collection, initialize it with an empty array
-           if (!$collection->has($key)) {
-               $collection->put($key, []);
-           }
-           // Append the ID of the object to the array associated with the key
-           $collection->get($key)[] = $value;
-       }
-   }
+            // Check if json_decode failed
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                continue; // Skip this entry if JSON is invalid
+            }
+
+            // Loop through each key-value pair in the parsed data
+            foreach ($productData as $key => $value) {
+                // If the key does not exist in the collection, initialize it with an empty array
+                if (!$collection->has($key)) {
+                    $collection->put($key, []);
+                }
+                // Append the value to the array associated with the key
+                $collection[$key][] = $value;
+            }
+        }
+    }
 
     dd($collection);
 
