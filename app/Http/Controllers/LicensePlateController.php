@@ -36,6 +36,7 @@ class LicensePlateController extends Controller
 // Convert JSON response to an array
 $responseArray = json_decode($transaction, true);
 
+dd($responseArray);
 // Initialize a new Laravel collection
 $collection = collect();
 
@@ -53,7 +54,6 @@ foreach ($responseArray as $obj) {
 
 
 
-    dd($collection);
 
 
 
