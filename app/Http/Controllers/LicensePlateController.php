@@ -30,34 +30,28 @@ class LicensePlateController extends Controller
                 [$request->parking_id]
             );
 
-            return  $transaction;
+            // return  $transaction;
 
-    // Initialize a new Laravel collection
-    $collection = collect();
 
-    // Loop through each object in the response array
-    foreach ($transaction as $obj) {
-        // Ensure we are handling array correctly
-        if (is_array($obj) && isset($obj['product'])) {
-            // Parse the JSON string in the 'product' field
-            $productData = json_decode($obj['product'], true); // Ensure decoding as an associative array
+// Convert JSON response to an array
+$responseArray = json_decode($transaction, true);
 
-            // Check if json_decode failed
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                continue; // Skip this entry if JSON is invalid
-            }
+// Initialize a new Laravel collection
+$collection = collect();
 
-            // Loop through each key-value pair in the parsed data
-            foreach ($productData as $key => $value) {
-                // If the key does not exist in the collection, initialize it with an empty array
-                if (!$collection->has($key)) {
-                    $collection->put($key, []);
-                }
-                // Append the value to the array associated with the key
-                $collection[$key][] = $value;
-            }
-        }
-    }
+// Loop through each object in the response array
+foreach ($responseArray as $obj) {
+    // Decode the 'product' attribute if it's a JSON string
+    $product = json_decode($obj['product'], true);
+    
+    // Merge the 'id' attribute with the decoded 'product' attribute
+    $mergedObject = array_merge(['id' => $obj['id']], $product);
+    
+    // Add the merged object to the collection
+    $collection->push($mergedObject);
+}
+
+
 
     dd($collection);
 
