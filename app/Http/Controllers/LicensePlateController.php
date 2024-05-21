@@ -30,19 +30,24 @@ class LicensePlateController extends Controller
                 [$request->parking_id]
             );
 
-            // Initialize a new Laravel collection
-            $collection = collect($transaction);
+// Initialize a new Laravel collection
+$collection = collect($transaction);
 
+// Loop through each object in the collection
+$collection->each(function ($item) {
+    // Decode the product JSON string as an associative array
+    $productData = json_decode($item['product'], true);
 
-            // Loop through each object in the collection
-            $collection->each(function ($item) {
-                // Decode the product JSON string
-                $productData = json_decode($item['product'], true);
+    // Check if json_decode failed
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        Log::error('JSON decode error: ' . json_last_error_msg() . ' for item ID: ' . $item['id']);
+        return;
+    }
 
-                // Extract the required parameters
-                $parkingId = $productData['parking_id'];
-                $licensePlate = $productData['license_plate'];
-                $parkingSpotDescription = $productData['parking_spot_description'];
+    // Extract the required parameters
+    $parkingId = $productData['parking_id'] ?? null;
+    $licensePlate = $productData['license_plate'] ?? null;
+    $parkingSpotDescription = $productData['parking_spot_description'] ?? null;
 
 
 
