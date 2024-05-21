@@ -30,13 +30,8 @@ class LicensePlateController extends Controller
                 [$request->parking_id]
             );
 
-            // return [
-            //     'data' =>  $transaction,
-            //     'status' =>  true,
-            //     'responseCode' =>  200,
-            //     'message' => "true."
-            // ];
-            
+            return  $transaction;
+
     // Initialize a new Laravel collection
     $collection = collect();
 
