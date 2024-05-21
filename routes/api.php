@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CountingController;
+use App\Http\Controllers\LicensePlateController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,5 +41,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('get/counting',  [CountingController::class, 'getCounting']);
     Route::post('edit/counting',  [CountingController::class, 'editCounting']);
+
+    Route::get('get/plate/list',  [LicensePlateController::class, 'getPlateList']);
 
 });
