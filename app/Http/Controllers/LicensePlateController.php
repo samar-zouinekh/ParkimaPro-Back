@@ -22,7 +22,7 @@ class LicensePlateController extends Controller
             );
 
             $transaction =  app('db')->select(
-                'select * 
+                'select transactions.id, transactions.product
             from transactions
             where transactions.parking_id = ?
             and transactions.updated_at >= NOW() - INTERVAL 1 DAY ',
@@ -30,7 +30,6 @@ class LicensePlateController extends Controller
             );
             
             dd($transaction);
-
 
         } catch (\Throwable $th) {
 
