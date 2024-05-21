@@ -30,10 +30,46 @@ class LicensePlateController extends Controller
                 [$request->parking_id]
             );
 
-       // Initialize a new Laravel collection
-$collection = collect($transaction);
-            return  $collection;
+            // Initialize a new Laravel collection
+            $collection = collect($transaction);
 
+
+            // Loop through each object in the collection
+            $collection->each(function ($item) {
+                // Decode the product JSON string
+                $productData = json_decode($item['product'], true);
+
+                // Extract the required parameters
+                $parkingId = $productData['parking_id'];
+                $licensePlate = $productData['license_plate'];
+                $parkingSpotDescription = $productData['parking_spot_description'];
+
+
+
+                return  $licensePlate;
+
+
+                // // Make the GET request with the extracted parameters
+                // $response = Http::get('http://your-api-endpoint.com', [
+                //     'parking_id' => $parkingId,
+                //     'license_plate' => $licensePlate,
+                //     'parking_spot_description' => $parkingSpotDescription,
+                // ]);
+
+                // Process the response (if needed)
+                // For example, you can log the response or store it in the database
+
+                // if ($response->successful()) {
+
+                //     $responseData = $response->json();
+                //     // Do something with the response data
+                // //     Log::info('API response:', $responseData);
+
+                // } else {
+
+                //     Log::error('API request failed for item ID: ' . $item['id']);
+                // }
+            });
 
 
         } catch (\Throwable $th) {
