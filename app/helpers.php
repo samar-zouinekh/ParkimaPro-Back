@@ -156,3 +156,8 @@ if (!function_exists('startsWith')) {
     $dailyPass = 2024;
     return $dailyPass;
 }
+function getParkingSessionStatus($parking_id, $operator_id, $license_plate, $pom)
+{
+
+ 
+}
