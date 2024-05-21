@@ -30,30 +30,7 @@ class LicensePlateController extends Controller
                 [$request->parking_id]
             );
 
-            // return  $transaction;
-
-
-// Convert JSON response to an array
-$responseArray = json_decode($transaction, true);
-
-dd($responseArray);
-// Initialize a new Laravel collection
-$collection = collect();
-
-// Loop through each object in the response array
-foreach ($responseArray as $obj) {
-    // Decode the 'product' attribute if it's a JSON string
-    $product = json_decode($obj['product'], true);
-    
-    // Merge the 'id' attribute with the decoded 'product' attribute
-    $mergedObject = array_merge(['id' => $obj['id']], $product);
-    
-    // Add the merged object to the collection
-    $collection->push($mergedObject);
-}
-
-
-
+            return  $transaction;
 
 
 
