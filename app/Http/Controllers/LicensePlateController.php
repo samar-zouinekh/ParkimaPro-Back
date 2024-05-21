@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LicensePlateRequest;
 use Faker\Provider\pl_PL\LicensePlate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class LicensePlateController extends Controller
 {
@@ -29,7 +30,30 @@ class LicensePlateController extends Controller
                 [$request->parking_id]
             );
             
-            dd($transaction);
+            // dd($transaction);
+
+    // Initialize a new Laravel collection
+    $collection = collect();
+
+    // Loop through each object in the response array
+    foreach ($transaction as $obj) {
+        // Parse the JSON string in the 'product' field
+        $productData = json_decode($obj["product"], true);
+
+        // Loop through each key-value pair in the parsed data
+        foreach ($productData as $key => $value) {
+            // If the key does not exist in the collection, initialize it with an empty array
+            if (!$collection->has($key)) {
+                $collection->put($key, []);
+            }
+            // Append the ID of the object to the array associated with the key
+            $collection->get($key)[] = $value;
+        }
+    }
+
+    dd($collection);
+
+
 
         } catch (\Throwable $th) {
 
