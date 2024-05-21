@@ -38,11 +38,11 @@ class LicensePlateController extends Controller
  
         foreach ($transaction as $item) {
             $productData = json_decode($item->product, true);
-            array_push($product, [
+            $product = array_merge($product, [
                 "licensePlate" => $productData['license_plate'],
                 "parkingSpotDescription" => $productData['parking_spot_description'],
             ]);
-            
+
             dd($product);
         }
 
