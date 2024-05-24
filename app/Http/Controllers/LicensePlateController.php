@@ -295,8 +295,8 @@ dd($transactions);
 
             $plateList[] =
                 [
-                    "payment_reference" => $transaction->payment_reference,
-                    "ticket_duration" => $transaction->ticket_duration,
+                    "payment_reference" => $productData['payment_reference'],
+                    // "ticket_duration" => $transaction->ticket_duration,
                     "licensePlate" => $productData['license_plate'],
                     "plate_info" =>  $productData['plate_info']
                 ];
