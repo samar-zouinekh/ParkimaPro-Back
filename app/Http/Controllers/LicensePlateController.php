@@ -269,7 +269,7 @@ class LicensePlateController extends Controller
             [$request->parking_id, 'pre_payment']
         );
 
-        dd($transactions);
+        // dd($transactions);
         if (!$transactions) {
             return [
                 'error' =>  [],
