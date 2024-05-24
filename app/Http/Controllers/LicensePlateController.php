@@ -301,19 +301,8 @@ class LicensePlateController extends Controller
                     "plate_info" =>  $productData['plate_info']
                 ];
         }
-        
-        return $plateList
-        //     $productData = json_decode($item->product, true);
-        //     $product = array_merge($product, [
-        //         "licensePlate" => $productData['license_plate'],
-        //         "parkingSpotDescription" => $productData['parking_spot_description'],
-        //     ]);
 
-        //     dd($product);
-        // }
-
-
-
+        return $plateList ;
 
         // } catch (\Throwable $th) {
 
