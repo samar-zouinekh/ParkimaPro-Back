@@ -226,7 +226,6 @@ class LoginController extends Controller
     public function phoneVerify(PhoneVerifyRequest $request)
     {
         $otp = app('cache')->get($request->phone);
-        // dump($otp);
 
         if ($request->otp != $otp) {
             return [
@@ -328,6 +327,77 @@ class LoginController extends Controller
             'status' =>  false,
             'responseCode' =>  400,
             'message' => "Invalid OTP."
+        ];
+    }
+
+    public function getParkingOnStreetList(PhoneVerifyRequest $request)
+    {
+        $agent = app('db')->select(
+            'SELECT admins.id, admins.name AS admin_name, admins.email, admins.phone,
+            roles.id AS role_id, roles.name AS role_name, roles.guard_name
+                from admins
+                JOIN model_has_roles ON admins.id = model_has_roles.model_id
+                JOIN roles ON roles.id = model_has_roles.role_id
+                WHERE roles.name IN ("enforcement_agent", "enforcement_and_ticketing_agent", "ticketing_agent")
+                and admins.phone = ? limit 1',
+            [$request->phone]
+        );
+
+        if (!$agent) {
+            return [
+                'error' => 'Unauthorized',
+                'status' =>  0,
+                'responseCode' =>  401,
+                'message' => trans('laravel-auth-api::translation.failed_authentication')
+            ];
+        }
+
+        $parkings = app('db')->select(
+            'SELECT parkings.id, parkings.name, parkings.parking_image, parkings.address
+                from parkings
+                JOIN agent_parking ON parkings.id = agent_parking.parking_id
+                JOIN admins ON agent_parking.agent_id = admins.id
+                WHERE admins.id = ?',
+            [$agent[0]->id]
+        );
+
+        $parkingType = app('db')->select(
+            'SELECT gateways.parking_type
+                from gateways
+                JOIN parkings ON gateways.id = parkings.gateway_id
+                JOIN agent_parking ON parkings.id = agent_parking.parking_id
+                JOIN admins ON agent_parking.agent_id = admins.id
+
+                WHERE admins.id = ? limit 1',
+            [$agent[0]->id]
+        );
+
+        if (!$parkings) {
+            return [
+                'error' => [],
+                'status' =>  false,
+                'responseCode' =>  404,
+                'message' => "No parking found."
+            ];
+        };
+
+        $parkingList = array();
+        foreach ($parkings as $parking) {
+            $parkingList[] =
+                [
+                    "parking_id" => $parking->id,
+                    "parking_name" => $parking->name,
+                    "parking_image" => $parking->parking_image,
+                    "parking_address" => $parking->address,
+                    "parking_type" => $parkingType[0]->parking_type,
+                ];
+        }
+
+        return [
+            'data' =>  $parkingList,
+            'status' =>  true,
+            'responseCode' =>  200,
+            'message' => "Parking list."
         ];
     }
 }

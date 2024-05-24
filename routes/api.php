@@ -28,7 +28,9 @@ Route::put('phone-auth/verification',  [LoginController::class, 'phoneVerificati
 Route::put('phone-auth/verify',  [LoginController::class, 'phoneVerify'])->withoutMiddleware(['auth:api']);
 
 Route::middleware('auth:api')->group(function () {
-   
+
+    Route::get('parkings',  [LoginController::class, 'getParkingOnStreetList']);
+
     Route::get('entryTicket/create',  [TicketController::class, 'entryTicket']);
     Route::get('ticket/consult',  [TicketController::class, 'consultTicket']);
     
@@ -43,5 +45,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('edit/counting',  [CountingController::class, 'editCounting']);
 
     Route::get('get/plate/list',  [LicensePlateController::class, 'getPlateList']);
+    Route::get('plate/list',  [LicensePlateController::class, 'plateList']);
 
 });
