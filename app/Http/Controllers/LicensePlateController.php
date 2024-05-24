@@ -279,16 +279,12 @@ class LicensePlateController extends Controller
             ];
         }
        
-
-
         $plateList = array();
         $product = array();
         foreach ($transactions as $transaction) {
            
-
-
             $productData = json_decode($transaction->product, true);
-            $product =[
+            $product []=[
                 "licensePlate" => $productData['license_plate'],
                 "parkingSpotDescription" => $productData['parking_spot_description'],
                 "payment_reference" => $transaction->reference,
