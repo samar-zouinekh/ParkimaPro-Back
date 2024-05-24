@@ -251,6 +251,7 @@ class LicensePlateController extends Controller
             and parkings.id = ? limit 1',
             [$request->parking_id]
         );
+
         if (!$result) {
             return [
                 'error' =>  [],
@@ -292,16 +293,27 @@ class LicensePlateController extends Controller
 
             ];
 
-            // $plateList[] =
-            //     [
-            //         "payment_reference" => $productData['payment_reference'],
-            //         // "ticket_duration" => $transaction->ticket_duration,
-            //         "licensePlate" => $productData['license_plate'],
-            //         "plate_info" =>  $productData['plate_info']
-            //     ];
         }
 
-        return $product ;
+        // return $product ;
+
+        $data = [
+            'operator_id' => $result[0]->operator_id,
+            'parking_id' => $result[0]->parking_id,
+        ];
+
+        $ugateway = app('p-connector')->profile('ugateway');
+        $ugateway->get('session/status/list', $data);
+
+        if ($ugateway->responseCodeNot(200)) {
+            return response()->json([
+                'message' => 'ugateway_down',
+                'success' => false,
+            ], 200);
+        }
+
+return ($ugateway);
+
 
         // } catch (\Throwable $th) {
 
