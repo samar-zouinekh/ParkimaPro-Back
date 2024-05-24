@@ -261,11 +261,12 @@ class LicensePlateController extends Controller
         }
 
         $transactions =  app('db')->select(
-            'select transactions.id, transactions.product, transactions.reference
+            'select transactions.id, transactions.product, transactions.reference, transactions.payment_type
             from transactions
             where transactions.parking_id = ?
+            and transactions.payment_type = ?
             and transactions.updated_at >= NOW() - INTERVAL 1 DAY ',
-            [$request->parking_id]
+            [$request->parking_id, "pre_payment"]
         );
 
         if (!$transactions) {
@@ -276,7 +277,7 @@ class LicensePlateController extends Controller
                 'message' => "transactions not found."
             ];
         }
-// dd($transactions);
+dd($transactions);
         $product = [
             'operator_id' => $result[0]->operator_id,
             'parking_id' => $result[0]->parking_id,
