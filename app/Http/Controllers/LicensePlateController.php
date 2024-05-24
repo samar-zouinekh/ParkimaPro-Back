@@ -291,18 +291,21 @@ class LicensePlateController extends Controller
             $product = array_merge($product, [
                 "licensePlate" => $productData['license_plate'],
                 "parkingSpotDescription" => $productData['parking_spot_description'],
+                "payment_reference" => $productData['payment_reference'],
+                "plate_info" =>  $productData['plate_info']
+
             ]);
 
-            $plateList[] =
-                [
-                    "payment_reference" => $productData['payment_reference'],
-                    // "ticket_duration" => $transaction->ticket_duration,
-                    "licensePlate" => $productData['license_plate'],
-                    "plate_info" =>  $productData['plate_info']
-                ];
+            // $plateList[] =
+            //     [
+            //         "payment_reference" => $productData['payment_reference'],
+            //         // "ticket_duration" => $transaction->ticket_duration,
+            //         "licensePlate" => $productData['license_plate'],
+            //         "plate_info" =>  $productData['plate_info']
+            //     ];
         }
 
-        return $plateList ;
+        return $product ;
 
         // } catch (\Throwable $th) {
 
