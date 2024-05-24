@@ -261,7 +261,7 @@ class LicensePlateController extends Controller
         }
 
         $transactions =  app('db')->select(
-            'select transactions.id, transactions.product
+            'select transactions.id, transactions.product, transactions.reference
             from transactions
             where transactions.parking_id = ?
             and transactions.updated_at >= NOW() - INTERVAL 1 DAY ',
@@ -276,7 +276,7 @@ class LicensePlateController extends Controller
                 'message' => "transactions not found."
             ];
         }
-dd($transactions);
+// dd($transactions);
         $product = [
             'operator_id' => $result[0]->operator_id,
             'parking_id' => $result[0]->parking_id,
@@ -291,7 +291,7 @@ dd($transactions);
             $product = array_merge($product, [
                 "licensePlate" => $productData['license_plate'],
                 "parkingSpotDescription" => $productData['parking_spot_description'],
-                "payment_reference" => $productData['payment_reference'],
+                "payment_reference" => $transaction->reference,
                 "plate_info" =>  $productData['plate_info']
 
             ]);
