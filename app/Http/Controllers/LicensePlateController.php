@@ -269,6 +269,7 @@ class LicensePlateController extends Controller
             [$request->parking_id, 'pre_payment']
         );
 
+        dd($transactions);
         if (!$transactions) {
             return [
                 'error' =>  [],
@@ -277,7 +278,6 @@ class LicensePlateController extends Controller
                 'message' => "transactions not found."
             ];
         }
-dd($transactions);
         $product = [
             'operator_id' => $result[0]->operator_id,
             'parking_id' => $result[0]->parking_id,
