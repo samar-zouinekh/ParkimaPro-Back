@@ -278,24 +278,23 @@ class LicensePlateController extends Controller
                 'message' => "transactions not found."
             ];
         }
-        $product = [
-            'operator_id' => $result[0]->operator_id,
-            'parking_id' => $result[0]->parking_id,
-        ];
+       
 
 
         $plateList = array();
-
+        $product = array();
         foreach ($transactions as $transaction) {
+           
+
 
             $productData = json_decode($transaction->product, true);
-            $product = array_merge($product, [
+            $product =[
                 "licensePlate" => $productData['license_plate'],
                 "parkingSpotDescription" => $productData['parking_spot_description'],
                 "payment_reference" => $transaction->reference,
                 "plate_info" =>  $productData['plate_info']
 
-            ]);
+            ];
 
             // $plateList[] =
             //     [
