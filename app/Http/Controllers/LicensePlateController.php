@@ -276,7 +276,7 @@ class LicensePlateController extends Controller
                 'message' => "transactions not found."
             ];
         }
-dd($transactions);
+// dd($transactions);
         $product = [
             'operator_id' => $result[0]->operator_id,
             'parking_id' => $result[0]->parking_id,
