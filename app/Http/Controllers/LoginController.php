@@ -346,7 +346,7 @@ class LoginController extends Controller
         if (!$agent) {
             return [
                 'error' => 'Unauthorized',
-                'status' =>  0,
+                'status' =>  false,
                 'responseCode' =>  401,
                 'message' => trans('laravel-auth-api::translation.failed_authentication')
             ];
