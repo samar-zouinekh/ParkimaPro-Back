@@ -307,7 +307,7 @@ class LicensePlateController extends Controller
                 'success' => false,
             ], 200);
         }
-
+        dump(collect($product), collect($ugateway));
         $firstCollection = collect($product)->keyBy('payment_reference')->toArray();
         $secondCollection = collect($ugateway)->keyBy('payment_reference')->toArray();
       
