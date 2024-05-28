@@ -312,7 +312,7 @@ class LicensePlateController extends Controller
             ], 200);
         }
 
-return ([$product,$ugateway]);
+return ([$data, $product, $ugateway]);
 
 
         // } catch (\Throwable $th) {
