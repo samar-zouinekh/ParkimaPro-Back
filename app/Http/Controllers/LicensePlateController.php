@@ -232,11 +232,6 @@ class LicensePlateController extends Controller
     }
 
 
-
-
-
-
-
     public function plateList(LicensePlateRequest $request)
     {
         // try {
@@ -271,6 +266,7 @@ class LicensePlateController extends Controller
         );
 
         // dd($transactions);
+
         if (!$transactions) {
             return [
                 'error' =>  [],
@@ -282,6 +278,7 @@ class LicensePlateController extends Controller
        
         $plateList = array();
         $product = array();
+
         foreach ($transactions as $transaction) {
            
             $productData = json_decode($transaction->product, true);
@@ -312,7 +309,7 @@ class LicensePlateController extends Controller
             ], 200);
         }
 
-return ($ugateway);
+return ([$product,$ugateway]);
 
 
         // } catch (\Throwable $th) {
