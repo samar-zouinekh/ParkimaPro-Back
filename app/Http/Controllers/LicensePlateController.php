@@ -307,26 +307,38 @@ class LicensePlateController extends Controller
                 'success' => false,
             ], 200);
         }
-dd($ugateway);
-        $firstCollection = collect($product);
-        $secondCollection = collect($ugateway);
+
+        $firstCollection = collect($product)->keyBy('payment_reference')->toArray();
+        $secondCollection = collect($ugateway)->keyBy('payment_reference')->toArray();
       
 // Convert payment_reference in $second array to integer for matching
-$firstCollection = $firstCollection->map(function ($item) {
-    $item['payment_reference'] = (int) $item['payment_reference'];
-    return $item;
-});
+// $firstCollection = $firstCollection->map(function ($item) {
+//     $item['payment_reference'] = (int) $item['payment_reference'];
+//     return $item;
+// });
 
-// Create a combined collection by merging based on payment_reference
-$combined = $secondCollection->map(function ($item) use ($firstCollection) {
-    $matched = $firstCollection->firstWhere('payment_reference', $item->payment_reference);
-    return [
-        'first_array_item' => $item,
-        'second_array_item' => $matched,
-    ];
-});
+// // Create a combined collection by merging based on payment_reference
+// $combined = $secondCollection->map(function ($item) use ($firstCollection) {
+//     $matched = $firstCollection->firstWhere('payment_reference', $item->payment_reference);
+//     return [
+//         'first_array_item' => $item,
+//         'second_array_item' => $matched,
+//     ];
+// });
 
-dd($combined);
+$tab = [];
+foreach($firstCollection as $paymentReference => $item)
+{
+    if($item['payment_reference'] == $paymentReference)
+    {
+        $tab[$paymentReference] = [
+            'first_array_item' => $item,
+            'second_array_item' => $secondCollection,
+        ];
+    }
+}
+
+dd($tab);
 
 return ($ugateway);
 
