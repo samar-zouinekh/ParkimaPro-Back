@@ -257,7 +257,7 @@ class LicensePlateController extends Controller
         }
 
         $transactions =  app('db')->select(
-            'select transactions.id, transactions.product, transactions.reference, transactions.payment_type
+            'select transactions.id, transactions.product, transactions.reference, transactions.payment_type, transactions.updated_at
             from transactions
             WHERE parking_id = ?
             AND payment_type = ?
