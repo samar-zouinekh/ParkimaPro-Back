@@ -257,11 +257,11 @@ class LicensePlateController extends Controller
         }
 
         $transactions =  app('db')->select(
-            'select transactions.id, transactions.product, transactions.reference, transactions.payment_type, transactions.updated_at
+            'select transactions.id, transactions.product, transactions.reference, transactions.payment_type, transactions.created_at
             from transactions
             WHERE parking_id = ?
             AND payment_type = ?
-            AND updated_at >= NOW() - INTERVAL 1 DAY',
+            AND created_at >= NOW() - INTERVAL 1 DAY',
             [$request->parking_id, 'pre_payment']
         );
 
