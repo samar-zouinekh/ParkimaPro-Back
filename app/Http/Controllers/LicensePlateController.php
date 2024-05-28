@@ -279,8 +279,6 @@ class LicensePlateController extends Controller
         $plateList = array();
         $product = array();
 
-// dd($transactions);
-
         foreach ($transactions as $transaction) {
            
             $productData = json_decode($transaction->product, true);
@@ -294,8 +292,6 @@ class LicensePlateController extends Controller
             ];
 
         }
-
-        // return $product ;
 
         $data = [
             'operator_id' => $result[0]->operator_id,
@@ -312,7 +308,25 @@ class LicensePlateController extends Controller
             ], 200);
         }
 
-dd($product);
+        $firstCollection = collect($product);
+        // $secondCollection = collect($second);
+      
+// Convert payment_reference in $second array to integer for matching
+$firstCollection = $firstCollection->map(function ($item) {
+    $item['payment_reference'] = (int) $item['payment_reference'];
+    return $item;
+});
+
+// Create a combined collection by merging based on payment_reference
+$combined = $ugateway->map(function ($item) use ($firstCollection) {
+    $matched = $firstCollection->firstWhere('payment_reference', $item->payment_reference);
+    return [
+        'first_array_item' => $item,
+        'second_array_item' => $matched,
+    ];
+});
+
+dd($combined);
 
 return ($ugateway);
 
