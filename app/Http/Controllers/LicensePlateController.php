@@ -279,7 +279,7 @@ class LicensePlateController extends Controller
         $plateList = array();
         $product = array();
 
-dd($transactions);
+// dd($transactions);
 
         foreach ($transactions as $transaction) {
            
