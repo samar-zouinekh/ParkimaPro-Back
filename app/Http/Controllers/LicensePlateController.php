@@ -304,7 +304,7 @@ class LicensePlateController extends Controller
 
         $ugateway = app('p-connector')->profile('ugateway');
         $ugateway->get('session/status/list', $data);
-
+dd($ugateway);
         if ($ugateway->responseCodeNot(200)) {
             return response()->json([
                 'message' => 'ugateway_down',
