@@ -307,9 +307,9 @@ class LicensePlateController extends Controller
                 'success' => false,
             ], 200);
         }
-        dump(collect($product), collect($ugateway));
+        dump(collect($product), collect($ugateway->getResponseBody()??[]));
         $firstCollection = collect($product)->keyBy('payment_reference')->toArray();
-        $secondCollection = collect($ugateway)->keyBy('payment_reference')->toArray();
+        $secondCollection = collect($ugateway->getResponseBody()??[])->keyBy('payment_reference')->toArray();
       
 // Convert payment_reference in $second array to integer for matching
 // $firstCollection = $firstCollection->map(function ($item) {
