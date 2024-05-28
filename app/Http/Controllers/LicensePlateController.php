@@ -341,7 +341,16 @@ foreach($firstCollection as $paymentReference => $item)
 }
 $tab = collect($tab)->sortByDesc('expiry_date');
 
-dd($tab);
+$tab2 = [];
+foreach($tab as $paymentReference => $item)
+{
+    if(!isset($tab2[$paymentReference]))
+    {
+        array_push($tab2, $item);
+    }
+}
+
+dd($tab2);
 
 return ($ugateway);
 
