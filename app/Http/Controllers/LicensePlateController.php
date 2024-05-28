@@ -338,7 +338,7 @@ foreach($firstCollection as $paymentReference => $item)
     }
 }
 
-dd($tab);
+dd($tab[0]->first_array_item);
 
 return ($ugateway);
 
