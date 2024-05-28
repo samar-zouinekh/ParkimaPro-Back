@@ -339,7 +339,7 @@ foreach($firstCollection as $paymentReference => $item)
         ];
     }
 }
-$tab = collect($tab)->sortBy('expiry_date');
+$tab = collect($tab)->sortByDesc('expiry_date');
 
 dd($tab);
 
