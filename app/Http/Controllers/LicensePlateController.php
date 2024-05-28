@@ -309,7 +309,7 @@ class LicensePlateController extends Controller
         }
 
         $firstCollection = collect($product);
-        // $secondCollection = collect($second);
+        $secondCollection = collect($ugateway);
       
 // Convert payment_reference in $second array to integer for matching
 $firstCollection = $firstCollection->map(function ($item) {
@@ -318,7 +318,7 @@ $firstCollection = $firstCollection->map(function ($item) {
 });
 
 // Create a combined collection by merging based on payment_reference
-$combined = $ugateway->map(function ($item) use ($firstCollection) {
+$combined = $secondCollection->map(function ($item) use ($firstCollection) {
     $matched = $firstCollection->firstWhere('payment_reference', $item->payment_reference);
     return [
         'first_array_item' => $item,
