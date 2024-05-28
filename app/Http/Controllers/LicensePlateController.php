@@ -307,7 +307,7 @@ class LicensePlateController extends Controller
                 'success' => false,
             ], 200);
         }
-dd($product);
+dd($ugateway);
         $firstCollection = collect($product);
         $secondCollection = collect($ugateway);
       
