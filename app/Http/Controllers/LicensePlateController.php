@@ -311,7 +311,7 @@ class LicensePlateController extends Controller
                 'success' => false,
             ], 200);
         }
-
+dd($ugateway);
 return ($ugateway);
 
 
