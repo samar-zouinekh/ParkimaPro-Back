@@ -333,7 +333,7 @@ foreach($firstCollection as $paymentReference => $item)
     {
         $tab[$paymentReference] = [
             'first_array_item' => $item,
-            'second_array_item' => $secondCollection,
+            'second_array_item' => $secondCollection[$paymentReference],
         ];
     }
 }
