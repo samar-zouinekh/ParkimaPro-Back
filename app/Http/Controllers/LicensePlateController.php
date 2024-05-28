@@ -335,7 +335,7 @@ foreach($firstCollection as $paymentReference => $item)
             'licensePlate' => $item['licensePlate'],
             'payment_reference' => $item['payment_reference'],
             'plate_info' => $item['payment_reference'],
-            'expiry_date' => !empty($secondCollection[$paymentReference]['expiry_date'])?$secondCollection[$paymentReference]['expiry_date']:null,
+            'expiry_date' => !empty($secondCollection[$paymentReference]->expiry_date)?$secondCollection[$paymentReference]->expiry_date:null,
         ];
     }
 }
