@@ -332,11 +332,14 @@ foreach($firstCollection as $paymentReference => $item)
     if($item['payment_reference'] == $paymentReference)
     {
         $tab[$paymentReference] = [
-            'first_array_item' => $item,
-            'second_array_item' => $secondCollection[$paymentReference],
+            'licensePlate' => $item['licensePlate'],
+            'payment_reference' => $item['payment_reference'],
+            'plate_info' => $item['payment_reference'],
+            'expiry_date' => !empty($secondCollection[$paymentReference]['expiry_date'])?$secondCollection[$paymentReference]['expiry_date']:null,
         ];
     }
 }
+$tab = collect($tab)->sortBy('expiry_date');
 
 dd($tab);
 
