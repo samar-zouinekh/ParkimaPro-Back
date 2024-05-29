@@ -287,7 +287,7 @@ class LicensePlateController extends Controller
                     "parkingSpotDescription" => $productData['parking_spot_description'],
                     "payment_reference" => $transaction->reference,
                     "plate_info" =>  $productData['plate_info'],
-                    "phone_number" =>  '+' + $productData['phone_number'],
+                    "phone_number" =>  '+'.$productData['phone_number'],
 
                 ];
             }
