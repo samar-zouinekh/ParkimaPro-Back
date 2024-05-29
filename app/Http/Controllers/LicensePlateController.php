@@ -328,14 +328,15 @@ class LicensePlateController extends Controller
             }
 
             $tab = collect($tab)->sortByDesc('expiry_date');
+
             $tab2 = [];
             foreach ($tab as $expiry_date => $item) {
                 if (!empty($expiry_date) && $expiry_date !== null) {
-                    $tab2[] = $item;
+                    array_push($tab2, $item);
                 }
             }
-            $tab3 = [];
 
+            $tab3 = [];
             foreach ($tab2 as $licensePlate => $item) {
                 if (!isset($tab3[$licensePlate])) {
                     array_push($tab3, $item);
@@ -348,6 +349,7 @@ class LicensePlateController extends Controller
                 'responseCode' =>  200,
                 'message' => "License plate list."
             ];
+
         // } catch (\Throwable $th) {
         //     app('log')->error($th->getMessage());
         //     return [
@@ -357,5 +359,6 @@ class LicensePlateController extends Controller
         //         'message' => "Server error."
         //     ];
         // }
+
     }
 }
