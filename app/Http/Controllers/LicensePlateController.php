@@ -307,25 +307,10 @@ class LicensePlateController extends Controller
                 'success' => false,
             ], 200);
         }
-        dump(collect($product), collect($ugateway->getResponseBody()??[]));
+        // dump(collect($product), collect($ugateway->getResponseBody()??[]));
         $firstCollection = collect($product)->keyBy('payment_reference')->toArray();
         $secondCollection = collect($ugateway->getResponseBody()??[])->keyBy('payment_reference')->toArray();
-      
-// Convert payment_reference in $second array to integer for matching
-// $firstCollection = $firstCollection->map(function ($item) {
-//     $item['payment_reference'] = (int) $item['payment_reference'];
-//     return $item;
-// });
-
-// // Create a combined collection by merging based on payment_reference
-// $combined = $secondCollection->map(function ($item) use ($firstCollection) {
-//     $matched = $firstCollection->firstWhere('payment_reference', $item->payment_reference);
-//     return [
-//         'first_array_item' => $item,
-//         'second_array_item' => $matched,
-//     ];
-// });
-
+ 
 $tab = [];
 foreach($firstCollection as $paymentReference => $item)
 {
@@ -334,25 +319,30 @@ foreach($firstCollection as $paymentReference => $item)
         $tab[$paymentReference] = [
             'licensePlate' => $item['licensePlate'],
             'payment_reference' => $item['payment_reference'],
-            'plate_info' => $item['payment_reference'],
+            'plate_info' => $item['plate_info'],
             'expiry_date' => !empty($secondCollection[$paymentReference]->expiry_date)?$secondCollection[$paymentReference]->expiry_date:null,
+            'status' => !empty($secondCollection[$paymentReference]->status)?$secondCollection[$paymentReference]->status:null,
+            'ticket_duration' => !empty($secondCollection[$paymentReference]->ticket_duration)?$secondCollection[$paymentReference]->ticket_duration:null,
+            'duration_remaining' => !empty($secondCollection[$paymentReference]->duration_remaining)?$secondCollection[$paymentReference]->duration_remaining:null,
         ];
     }
 }
+
 $tab = collect($tab)->sortByDesc('expiry_date');
 
 $tab2 = [];
+
 foreach($tab as $paymentReference => $item)
 {
     if(!isset($tab2[$paymentReference]))
-    {
+    {  
         array_push($tab2, $item);
     }
 }
-
+ 
 dd($tab2);
 
-return ($ugateway);
+return ($tab2);
 
 
         // } catch (\Throwable $th) {
