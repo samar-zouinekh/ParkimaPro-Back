@@ -331,12 +331,14 @@ class LicensePlateController extends Controller
 
             $tab2 = [];
             foreach ($tab as $expiry_date => $item) {
-                dump($tab, $item);
-                if (!empty($item[$expiry_date])) {
+                dump($tab, $item["expiry_date"]);
+                if (!empty($item["expiry_date"])) {
                     array_push($tab2, $item);
                 }
             }
-dd($tab2);
+
+            dd($tab2);
+
             $tab3 = [];
             foreach ($tab2 as $licensePlate => $item) {
                 if (!isset($tab3[$licensePlate])) {
