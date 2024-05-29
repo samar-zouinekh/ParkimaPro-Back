@@ -331,7 +331,7 @@ class LicensePlateController extends Controller
 
             $tab2 = [];
             foreach ($tab as $expiry_date => $item) {
-                if (!empty($expiry_date) && $expiry_date !== null) {
+                if (!empty($item[$expiry_date])) {
                     array_push($tab2, $item);
                 }
             }
