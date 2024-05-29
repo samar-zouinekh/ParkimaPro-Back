@@ -337,7 +337,7 @@ class LicensePlateController extends Controller
             }
 
             $tab3 = [];
-            foreach ($tab2 as $licensePlate => $item) {
+            foreach ($tab as $licensePlate => $item) {
                 if (!isset($tab3[$licensePlate])) {
                     array_push($tab3, $item);
                 }
