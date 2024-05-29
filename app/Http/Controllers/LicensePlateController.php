@@ -337,8 +337,6 @@ class LicensePlateController extends Controller
                 }
             }
 
-            dd($tab2);
-
             $tab3 = [];
             foreach ($tab2 as $licensePlate => $item) {
                 if (!isset($tab3[$licensePlate])) {
