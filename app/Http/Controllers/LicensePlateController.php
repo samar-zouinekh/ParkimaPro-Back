@@ -234,7 +234,7 @@ class LicensePlateController extends Controller
 
     public function plateList(LicensePlateRequest $request)
     {
-        // try {
+        try {
 
             // get the parking_id and operator_id ready
 
@@ -264,8 +264,6 @@ class LicensePlateController extends Controller
             AND created_at >= NOW() - INTERVAL 1 DAY',
                 [$request->parking_id, 'pre_payment']
             );
-
-            // dd($transactions);
 
             if (!$transactions) {
                 return [
@@ -317,7 +315,6 @@ class LicensePlateController extends Controller
                         'payment_reference' => $item['payment_reference'],
                         'plate_info' => $item['plate_info'],
                         'phone_number' => $item['phone_number'],
-
                         'expiry_date' => !empty($secondCollection[$paymentReference]->expiry_date) ? $secondCollection[$paymentReference]->expiry_date : null,
                         'status' => !empty($secondCollection[$paymentReference]->status) ? $secondCollection[$paymentReference]->status : null,
                         'ticket_duration' => !empty($secondCollection[$paymentReference]->ticket_duration) ? $secondCollection[$paymentReference]->ticket_duration : null,
@@ -350,15 +347,15 @@ class LicensePlateController extends Controller
                 'message' => "License plate list."
             ];
 
-        // } catch (\Throwable $th) {
-        //     app('log')->error($th->getMessage());
-        //     return [
-        //         'error' =>  [],
-        //         'status' =>  false,
-        //         'responseCode' =>  500,
-        //         'message' => "Server error."
-        //     ];
-        // }
+        } catch (\Throwable $th) {
+            app('log')->error($th->getMessage());
+            return [
+                'error' =>  [],
+                'status' =>  false,
+                'responseCode' =>  500,
+                'message' => "Server error."
+            ];
+        }
 
     }
 }

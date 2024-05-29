@@ -44,7 +44,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('get/counting',  [CountingController::class, 'getCounting']);
     Route::post('edit/counting',  [CountingController::class, 'editCounting']);
 
-    Route::get('get/plate/list',  [LicensePlateController::class, 'getPlateList']);
-    Route::get('plate/list',  [LicensePlateController::class, 'plateList']);
+    Route::get('get/plate/list',  [LicensePlateController::class, 'plateList']);
+    // Route::get('plate/list',  [LicensePlateController::class, 'plateList']);
 
 });
