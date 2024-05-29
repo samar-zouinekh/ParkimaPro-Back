@@ -332,9 +332,9 @@ foreach($firstCollection as $paymentReference => $item)
 $tab = collect($tab)->sortByDesc('expiry_date');
 
 $tab2 = [];
-foreach($tab as $paymentReference => $item)
+foreach($tab as $licensePlate => $item)
 {
-    if(!isset($tab2[$paymentReference]))
+    if(!isset($tab2[$licensePlate]))
     {  
         array_push($tab2, $item);
     }
