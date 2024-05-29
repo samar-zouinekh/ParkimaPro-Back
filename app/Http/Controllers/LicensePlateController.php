@@ -330,7 +330,7 @@ class LicensePlateController extends Controller
             $tab = collect($tab)->sortByDesc('expiry_date');
             $tab2 = [];
             foreach ($tab as $expiry_date => $item) {
-                if (!empty($item) && $item !== null) {
+                if (!empty($expiry_date) && $expiry_date !== null) {
                     $tab2[] = $item;
                 }
             }
