@@ -234,7 +234,7 @@ class LicensePlateController extends Controller
 
     public function plateList(LicensePlateRequest $request)
     {
-        try {
+        // try {
 
             // get the parking_id and operator_id ready
 
@@ -345,14 +345,14 @@ class LicensePlateController extends Controller
                 'responseCode' =>  200,
                 'message' => "License plate list."
             ];
-        } catch (\Throwable $th) {
-            app('log')->error($th->getMessage());
-            return [
-                'error' =>  [],
-                'status' =>  false,
-                'responseCode' =>  500,
-                'message' => "Server error."
-            ];
-        }
+        // } catch (\Throwable $th) {
+        //     app('log')->error($th->getMessage());
+        //     return [
+        //         'error' =>  [],
+        //         'status' =>  false,
+        //         'responseCode' =>  500,
+        //         'message' => "Server error."
+        //     ];
+        // }
     }
 }
