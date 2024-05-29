@@ -320,6 +320,7 @@ foreach($firstCollection as $paymentReference => $item)
             'licensePlate' => $item['licensePlate'],
             'payment_reference' => $item['payment_reference'],
             'plate_info' => $item['plate_info'],
+
             'expiry_date' => !empty($secondCollection[$paymentReference]->expiry_date)?$secondCollection[$paymentReference]->expiry_date:null,
             'status' => !empty($secondCollection[$paymentReference]->status)?$secondCollection[$paymentReference]->status:null,
             'ticket_duration' => !empty($secondCollection[$paymentReference]->ticket_duration)?$secondCollection[$paymentReference]->ticket_duration:null,
@@ -331,7 +332,6 @@ foreach($firstCollection as $paymentReference => $item)
 $tab = collect($tab)->sortByDesc('expiry_date');
 
 $tab2 = [];
-
 foreach($tab as $paymentReference => $item)
 {
     if(!isset($tab2[$paymentReference]))
@@ -340,15 +340,13 @@ foreach($tab as $paymentReference => $item)
     }
 }
  
-dd($tab2);
+// dd($tab2);
 
 return ($tab2);
 
 
         // } catch (\Throwable $th) {
-
         //     app('log')->error($th->getMessage());
-
         //     return [
         //         'error' =>  [],
         //         'status' =>  false,
