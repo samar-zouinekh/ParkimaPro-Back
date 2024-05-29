@@ -322,6 +322,7 @@ class LicensePlateController extends Controller
                         'status' => !empty($secondCollection[$paymentReference]->status) ? $secondCollection[$paymentReference]->status : null,
                         'ticket_duration' => !empty($secondCollection[$paymentReference]->ticket_duration) ? $secondCollection[$paymentReference]->ticket_duration : null,
                         'duration_remaining' => !empty($secondCollection[$paymentReference]->duration_remaining) ? $secondCollection[$paymentReference]->duration_remaining : null,
+                  
                     ];
                 }
             }
@@ -333,14 +334,16 @@ class LicensePlateController extends Controller
                     $tab2[] = $item;
                 }
             }
-            foreach ($tab as $licensePlate => $item) {
-                if (!isset($tab2[$licensePlate])) {
-                    array_push($tab2, $item);
+            $tab3 = [];
+
+            foreach ($tab2 as $licensePlate => $item) {
+                if (!isset($tab3[$licensePlate])) {
+                    array_push($tab3, $item);
                 }
             }
 
             return [
-                'data' =>  $tab2,
+                'data' =>  $tab3,
                 'status' =>  true,
                 'responseCode' =>  200,
                 'message' => "License plate list."
