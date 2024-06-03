@@ -285,7 +285,7 @@ class LicensePlateController extends Controller
                     "parkingSpotDescription" => $productData['parking_spot_description'],
                     "payment_reference" => $transaction->reference,
                     "plate_info" =>  $productData['plate_info'],
-                    "phone_number" =>  '+'.$productData['phone_number'],
+                    "phone_number" =>  '+' . $productData['phone_number'],
 
                 ];
             }
@@ -304,6 +304,7 @@ class LicensePlateController extends Controller
                     'success' => false,
                 ], 200);
             }
+            
             $firstCollection = collect($product)->keyBy('payment_reference')->toArray();
             $secondCollection = collect($ugateway->getResponseBody() ?? [])->keyBy('payment_reference')->toArray();
 
@@ -319,7 +320,7 @@ class LicensePlateController extends Controller
                         'status' => !empty($secondCollection[$paymentReference]->status) ? $secondCollection[$paymentReference]->status : null,
                         'ticket_duration' => !empty($secondCollection[$paymentReference]->ticket_duration) ? $secondCollection[$paymentReference]->ticket_duration : null,
                         'duration_remaining' => !empty($secondCollection[$paymentReference]->duration_remaining) ? $secondCollection[$paymentReference]->duration_remaining : null,
-                  
+
                     ];
                 }
             }
@@ -335,7 +336,7 @@ class LicensePlateController extends Controller
 
             $tab3 = [];
             foreach ($tab2 as $licensePlate => $item) {
-                if (!isset($tab3[$licensePlate])) {
+                if (!isset($item[$licensePlate])) {
                     array_push($tab3, $item);
                 }
             }
@@ -346,7 +347,6 @@ class LicensePlateController extends Controller
                 'responseCode' =>  200,
                 'message' => "License plate list."
             ];
-
         } catch (\Throwable $th) {
             app('log')->error($th->getMessage());
             return [
@@ -356,6 +356,5 @@ class LicensePlateController extends Controller
                 'message' => "Server error."
             ];
         }
-
     }
 }
