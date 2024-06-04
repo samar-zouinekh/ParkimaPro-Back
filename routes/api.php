@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CountingController;
+use App\Http\Controllers\EnforcementController;
 use App\Http\Controllers\LicensePlateController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Http\Request;
@@ -46,5 +47,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('get/plate/list',  [LicensePlateController::class, 'plateList']);
     // Route::get('plate/list',  [LicensePlateController::class, 'plateList']);
+
+    Route::get('get/products',  [EnforcementController::class, 'getProduct']);
+    Route::post('make/enforcement',  [EnforcementController::class, 'makeEnforcement']);
 
 });

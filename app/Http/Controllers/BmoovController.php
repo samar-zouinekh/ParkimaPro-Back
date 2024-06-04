@@ -50,6 +50,44 @@ class BmoovController extends Controller
             app('db')->update('update transactions set status = \'' . $status . '\', updated_at = \'' . date('Y-m-d H:i:s') . '\' where reference = ?', [$reference]);
         }
     }
+    public static function saveEnforcement($data)
+    {
+        app('db')->insert('insert into enforcements (parking_id, agent_shift, agent_name, enforcement_date, type, gravity, cause, amount, payment_status, payment_methode, enforcement_reference, enforced_license_plate, enforced_phone_number, enforced_car_picture) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+        //  dd($data),
+            $data['parking'],
+            $data['agent_shift'],
+            $data['agent_name'],
+            date('Y-m-d H:i:s'),
+            $data['type'],
+            $data['gravity'],
+            $data['cause'],
+            $data['amount'],
+            'pending',
+            '',
+            $data['enforcement_reference'],
+            $data['enforced_license_plate'],
+            $data['enforced_phone_number'],
+            $data['enforced_car_picture'],
+        ]);
+    }
+    public static function updateEnforcement(string $enforcement_reference, string $status,$shiftId = null, $payment_methode)
+    {
+        if ($status === 'verified' || $status === 'booked') {  
+            // Get transaction ID
+            $result = app('db')->select(
+                'select id
+                 from transactions
+                 where reference = ? limit 1',
+                [$enforcement_reference]);
 
+            $invoiceNumber = $enforcement_reference .'-' .$shiftId;
+            $payment_methode= $payment_methode;
+
+            app('db')->update('update enforcements set status = \'' . $status . '\',receipt_number = \'' . $invoiceNumber . '\', updated_at = \'' . date('Y-m-d H:i:s') . '\' where reference = ?', [$enforcement_reference]);
+
+        } else {
+            app('db')->update('update enforcements set status = \'' . $status . '\', updated_at = \'' . date('Y-m-d H:i:s') . '\' where reference = ?', [$enforcement_reference]);
+        }
+    }
 
 }
