@@ -357,4 +357,100 @@ class LicensePlateController extends Controller
             ];
         }
     }
+
+
+    public function plateStatus(LicensePlateRequest $request)
+    { 
+        try {
+
+            // get the parking_id and operator_id ready
+
+            $result = app('db')->select(
+                'select gateways.shift_id, gateways.parking_type, gateways.type, gateways.cashier_contract_id, gateways.cashier_consumer_id, gateways.shift_sub_user, gateways.parking_id, gateways.timezone_offset, operators.operator_id
+            from parkings, gateways, operators
+            where parkings.gateway_id = gateways.id
+            and gateways.operator_id = operators.id
+            and parkings.id = ? limit 1',
+                [$request->parking_id]
+            );
+
+            if (!$result) {
+                return [
+                    'error' =>  [],
+                    'status' =>  false,
+                    'responseCode' =>  404,
+                    'message' => "Parking not found."
+                ];
+            }
+
+     
+            $product = array();
+
+            $data = [
+                'operator_id' => $result[0]->operator_id,
+                'parking_id' => $result[0]->parking_id,
+            ];
+
+            $ugateway = app('p-connector')->profile('ugateway');
+            $ugateway->get('session/status/list', $data);
+
+            if ($ugateway->responseCodeNot(200)) {
+                return response()->json([
+                    'message' => 'ugateway_down',
+                    'success' => false,
+                ], 200);
+            }
+            
+            $firstCollection = collect($product)->keyBy('payment_reference')->toArray();
+            $secondCollection = collect($ugateway->getResponseBody() ?? [])->keyBy('payment_reference')->toArray();
+
+            $tab = [];
+            foreach ($firstCollection as $paymentReference => $item) {
+                if ($item['payment_reference'] == $paymentReference) {
+                    $tab[$paymentReference] = [
+                        'licensePlate' => $item['licensePlate'],
+                        'payment_reference' => $item['payment_reference'],
+                        'plate_info' => $item['plate_info'],
+                        'phone_number' => $item['phone_number'],
+                        'expiry_date' => !empty($secondCollection[$paymentReference]->expiry_date) ? $secondCollection[$paymentReference]->expiry_date : null,
+                        'status' => !empty($secondCollection[$paymentReference]->status) ? $secondCollection[$paymentReference]->status : null,
+                        'ticket_duration' => !empty($secondCollection[$paymentReference]->ticket_duration) ? $secondCollection[$paymentReference]->ticket_duration : null,
+                        'duration_remaining' => !empty($secondCollection[$paymentReference]->duration_remaining) ? $secondCollection[$paymentReference]->duration_remaining : null,
+
+                    ];
+                }
+            }
+
+            $tab = collect($tab)->sortByDesc('expiry_date');
+
+            $tab2 = [];
+            foreach ($tab as $expiry_date => $item) {
+                if (!empty($item["expiry_date"])) {
+                    array_push($tab2, $item);
+                }
+            }
+
+            $tab3 = [];
+            foreach ($tab2 as $licensePlate => $item) {
+                if (!isset($item[$licensePlate])) {
+                    array_push($tab3, $item);
+                }
+            }
+
+            return [
+                'data' =>  $tab3,
+                'status' =>  true,
+                'responseCode' =>  200,
+                'message' => "License plate list."
+            ];
+        } catch (\Throwable $th) {
+            app('log')->error($th->getMessage());
+            return [
+                'error' =>  [],
+                'status' =>  false,
+                'responseCode' =>  500,
+                'message' => "Server error."
+            ];
+        }
+    }
 }

@@ -81,6 +81,7 @@ class BmoovController extends Controller
                 [$enforcement_reference]);
 
             $invoiceNumber = $enforcement_reference .'-' .$shiftId;
+
             $payment_methode= $payment_methode;
 
             app('db')->update('update enforcements set status = \'' . $status . '\',receipt_number = \'' . $invoiceNumber . '\', updated_at = \'' . date('Y-m-d H:i:s') . '\' where reference = ?', [$enforcement_reference]);
