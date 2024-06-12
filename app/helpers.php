@@ -16,6 +16,18 @@ if (!function_exists('iso8601_duration')) {
     }
 }
 
+if (! function_exists('limiter')) {
+    /**
+     * Get the rate limiter instance.
+     *
+     * @return \Illuminate\Cache\RateLimiter
+     */
+    function limiter()
+    {
+        return app(\Illuminate\Cache\RateLimiter::class);
+    }
+}
+
 if (!function_exists('trans_db')) {
     /**
      * Replace the lumen default trans() to get translation from database.

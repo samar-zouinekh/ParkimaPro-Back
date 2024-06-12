@@ -11,9 +11,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\SmsProviders\WinSMS;
+
 
 class LoginController extends Controller
 {
+
+    use WinSMS;
 
     /**
      *   @OA\Post(
@@ -163,19 +167,12 @@ class LoginController extends Controller
 
             // Generate unique OTP code
 
-            $otp = rand(100000, 999999);
-            $otp = 1234;
+            // $otp = rand(100000, 999999);
+            // $otp = 1234;
 
-            // Store the $otp value in the cache for 900 seconds (15 minutes) or retrieve it if already exists
-
-            app('cache')->remember($request->phone, 900, function () use ($otp) {
-                try {
-                    return $otp;
-                } catch (\Exception $e) {
-                    \Log::error($e->getMessage());
-                }
-            });
-
+            $this->sendOtp(rand(1000, 9999), '216'.$request->phone) ?
+            $this->smsSendingSuccess('216'.$request->phone) : $this->smsSendingFailure();
+   
             return [
                 'data' =>  $data,
                 'status' =>  true,
@@ -225,7 +222,10 @@ class LoginController extends Controller
 
     public function phoneVerify(PhoneVerifyRequest $request)
     {
-        $otp = app('cache')->get($request->phone);
+        // $this->verifySms($request->code, $request->phone) ?
+        // $this->verificationCodeSuccessResponse() : $this->verificationCodeFailureResponse();
+
+        $otp = app('cache')->get('216'.$request->phone);
 
         if ($request->otp != $otp) {
             return [
@@ -313,7 +313,7 @@ class LoginController extends Controller
             $success['access_token'] = $user->createToken('ApiToken')->accessToken;
             $success['user'] = $successAgent;
             // dd($success);
-            app('cache')->forget($request->phone);
+            app('cache')->forget('216'.$request->phone);
 
             return [
                 'data' =>  $success,
