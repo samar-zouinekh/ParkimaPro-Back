@@ -187,7 +187,7 @@ class EnforcementController extends Controller
     {
 
         $result = app('db')->select(
-            'select enforced_license_plate, amount, cause, type
+            'select enforced_license_plate, amount, cause, type, enforcement_reference
         from enforcements
         where enforcements.enforced_license_plate = ?
         order by id desc limit 1',
