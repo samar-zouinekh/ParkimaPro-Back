@@ -53,5 +53,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('make/enforcement',  [EnforcementController::class, 'makeEnforcement']);
     
     Route::post('pay/enforcement',  [EnforcementController::class, 'payEnforcement']);
+    Route::post('cashPay/enforcement',  [EnforcementController::class, 'cashPayEnforcement']);
 
 });

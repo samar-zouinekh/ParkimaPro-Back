@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EnforcementRequest;
+use App\Providers\TenancyServiceProvider as ProvidersTenancyServiceProvider;
+use App\Tenancy\TenancyServiceProvider;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
@@ -159,6 +161,7 @@ class EnforcementController extends Controller
                 ) . ' ' . ($result[0]->symbol ?? ''),
                 'enforced_license_plate' => $request->license_plate,
                 'enforced_phone_number' => $request->phone_number,
+                'enforcement_reference' =>$enforcement_reference
             ];
 
             return [
@@ -231,7 +234,7 @@ class EnforcementController extends Controller
             [$request->enforced_license_plate, $request->enforcement_reference]
         );
 
-        dd($product);
+        // dd($product);
 
         if ($result[0]->type == "Ugateway") {
 
@@ -255,55 +258,41 @@ class EnforcementController extends Controller
                     ], 200);
                 }
 
-                $salt = substr(str_shuffle(str_repeat(
-                    $x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-                    ceil(5 / strlen($x))
-                )), 1, 5);
-
                 $data = [
-                    'identifier' => env('PAYMENT_IDENTIFIER', 'bmoov_express'),
+                    'identifier' => env('PAYMENT_IDENTIFIER', 'bmoov_parkimapro'),
                     'tenant' => tenant()->id,
-                    'provider' => $request->provider,
-                    // 'amount' => number_format($ugateway->ticket_amount / $result[0]->round ?? 1, $result[0]->fractional_part, '.', ''),
-                    // 'original_amount' => number_format($ugateway->original_amount / $result[0]->round ?? 1, $result[0]->fractional_part, '.', ''),
-
-                    // 'amount' => number_format($ugateway->ticket_amount / pow(10,  $result[0]->fractional_part), 3, '.', ''),
-                    // 'original_amount' => $ugateway->amount_ht / pow(10,  $result[0]->fractional_part),
-                    // 'promotion_id' => $promotion_id,
-                    // 'tariff_class' => $tariff_class,
+                    'provider' => $request->payment_methode,
+                    'amount' => number_format($request->amount / $result[0]->round ?? 1, $result[0]->fractional_part, '.', ''),
                     'currency' => $result[0]->code,
-                    'client' => $request->get('client', '[]'),
+                    'client' =>  "{}",
+
                     'product' => json_encode([
-                        'parking_id' => $request->qr,
-                        'license_plate' => $request->ticket_value,
-                        'plate_info' => $request->plate_info,
-                        'phone_number' => $request->phone_number,
-                        'type' => 'license_plate',
-                        'value' => $request->ticket_value,
-                        'parking_spot_description' => $request->parking_spot_description,
-                        // 'entry_datetime' => (new DateTime($ugateway->ticket_entry_time))->format(locale_datetime_format()),
-                        // 'duration' => CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
-                        //     ->locale(app()->getLocale())->forHumans(['parts' => 4, 'join' => true]),
-                        // 'amount' => number_format(
-                        //     $ugateway->ticket_amount / ($result[0]->round ?? 1),
-                        //     $result[0]->fractional_part ?? 3
-                        // ) . ' ' . ($result[0]->symbol ?? ''),
-                        // 'ticket_expiration_time' => (new DateTime($ugateway->ticket_expiration_time))->format(locale_datetime_format()),
-                        // 'end_tariff_time' => $ugateway->ticket_expiration_time,
+                        'enforcement_date' => (new DateTime('now', new DateTimeZone($result[0]->timezone_offset ?? 'UTC')))->format('Y-m-d H:i:s'),
+                        'type' => $request->type,
+                        'gravity' => $request->gravity,
+                        'cause' => $request->cause,
+                        'amount' => number_format(
+                            $request->amount,
+                            $result[0]->fractional_part ?? 3
+                        ) . ' ' . ($result[0]->symbol ?? ''),
+                        'enforced_license_plate' => $request->license_plate,
+                        'enforced_phone_number' => $request->phone_number,
+
                     ]),
 
-                    'meta_data' => ['parking_qr' => $salt . base64_encode($request->qr)],
                     'application_type' => 'web:react-js',
-                    // 'application_version' => TenancyServiceProvider::VERSION,
-                    'type' => 'ONE_TIME_PAYMENT', // or maybe INSTALLMENT
+                    'application_version' => "1.0.0",
+                    'type' => 'ONE_TIME_PAYMENT',
                     'ip_address' => optional(json_decode($request->get('client', '[]')))->IPv4 ?? '0.0.0.0',
-                    // 'payment_type' => $payment_type,
+                    'payment_type' =>  'enforcement_payment',
                 ];
 
                 /** @var \MedianetDev\PConnector\PConnector $payment */
                 $payment = app('p-connector')->profile('payment');
 
                 $payment->post('get/interface', $data);
+
+                dd($payment);
 
                 return 200 == $payment->getResponseStatusCode()
                     ? $this->saveTransactionAndReturnResponse(array_merge($data, [
@@ -313,6 +302,155 @@ class EnforcementController extends Controller
                         'message' => trans_db('validation', 'payment_pay_engine_down'),
                         'success' => false,
                     ], 200);
+            } else {
+
+                return [
+                    'error' =>  [],
+                    'status' =>  false,
+                    'responseCode' =>  200,
+                    'message' => "this parking is not on street."
+                ];
+            }
+        } else {
+
+            return [
+                'error' =>  [],
+                'status' =>  false,
+                'responseCode' =>  200,
+                'message' => "this parking belgons to another gateway."
+            ];
+        }
+
+        $result = [];
+
+        return [
+            'data' =>  $result,
+            'status' =>  true,
+            'responseCode' =>  200,
+            'message' => "Done successfully."
+        ];
+    }
+
+
+
+    public function cashPayEnforcement(EnforcementRequest $request)
+    {
+        $result = app('db')->select(
+            'select parkings.paid_grace_period, gateways.shift_id, gateways.parking_type, gateways.type, gateways.cashier_contract_id, gateways.cashier_consumer_id, gateways.shift_sub_user,  parkings.promotion_id, currencies.round, currencies.fractional_part, currencies.symbol, currencies.code, gateways.parking_id, gateways.timezone_offset, operators.operator_id
+        from parkings, gateways, operators, currencies
+        where parkings.gateway_id = gateways.id
+        and gateways.operator_id = operators.id
+        and gateways.currency_id = currencies.id
+        and parkings.id = ? limit 1',
+            [$request->parking_id]
+        );
+// dd($result[0]->type );
+        if ($result[0]->type == "Ugateway") {
+
+            if ($result[0]->parking_type == "on_street") {
+
+                // check if shift is valid
+                $dataShift = [
+                    'operator_id' => (int)$result[0]->operator_id,
+                    'parking_id' => (int)$result[0]->parking_id,
+                    'user_id' => (int)$result[0]->cashier_consumer_id,
+                ];
+
+                $gateway_shift = app('p-connector')->profile('ugateway');
+                $gateway_shift->get('shift', $dataShift);
+                if ($gateway_shift->responseCodeNot(200)) {
+
+                    return response()->json([
+                        'message' => trans_db('validation', 'missing shift ID'),
+                        'success' => false,
+                    ], 200);
+                }
+
+                $data = [
+                    'operator_id' => (int)$result[0]->operator_id,
+                    'parking_id' => (int)$result[0]->parking_id,
+                    'tenant' => tenant()->id,
+                    'payment_methode' => 'cash-payment',
+                    'payment_status' => 'paid',
+                    'enforcement_date_payment' => (new DateTime('now', new DateTimeZone($result[0]->timezone_offset ?? 'UTC')))->format('Y-m-d H:i:s'),
+                    'enforcement_reference' => $request->enforcement_reference,
+                    'enforced_license_plate' => $request->enforced_license_plate,
+                    // 'enforced_phone_number' => $request->phone_number,
+                ];
+
+                $gateway_payment = app('p-connector')->profile('ugateway');
+                $gateway_payment->post('cash/pay', $data);
+            
+                if ($gateway_payment->responseCodeNot(200)) {
+                    
+                    $data['payment_status'] = 'failed';   
+                    
+                    return response()->json([
+                        'message' => trans_db('validation', 'missing shift ID'),
+                        'success' => false,
+                    ], 200);
+                }
+
+                $data['payment_status'] = 'booked';   
+
+                if ($data['payment_status'] === 'paid' || $data['payment_status'] === 'booked') {
+
+                    // Get enforcement
+
+                    $product = app('db')->select(
+                        'select enforced_license_plate, amount, cause, type
+                    from enforcements
+                    where enforcements.enforced_license_plate = ? and enforcement_reference = ?
+                    order by id desc limit 1',
+                        [$request->enforced_license_plate, $request->enforcement_reference]
+                    );
+
+        //  dd($product);
+
+                    // $enforcement_reference = $data['enforcement_reference'] . '-' . $gateway_shift->shift_id;
+                    $status = 'booked';
+                    $payment_methode = 'cash-payment';
+
+                    app('db')->update(
+                        'update enforcements set payment_methode = \'' . $payment_methode . '\',payment_status = \'' . $status . '\',enforcement_date_payment = \''  . date('Y-m-d H:i:s') . '\'  where enforcements.enforced_license_plate = ? and enforcement_reference = ?
+                    order by id desc limit 1',
+                        [$request->enforced_license_plate, $request->enforcement_reference]
+                    );
+
+                } else {
+                   
+                    $status = 'failed';
+                    $payment_methode = 'cash-payment';
+
+                    app('db')->update(
+                        'update enforcements set payment_methode = \'' . $payment_methode . '\',payment_status = \'' . $status . '\',enforcement_date_payment = \'' . date('Y-m-d H:i:s') . '\'  where enforcements.enforced_license_plate = ? and enforcement_reference = ?
+                    order by id desc limit 1',
+                        [$request->enforced_license_plate, $request->enforcement_reference]
+                    );
+                }
+
+                $product = app('db')->select(
+                    'select enforced_license_plate, amount, cause, type, enforcement_date_payment
+                from enforcements
+                where enforcements.enforced_license_plate = ? and enforcement_reference = ?
+                order by id desc limit 1',
+                    [$request->enforced_license_plate, $request->enforcement_reference]
+                );
+
+             $receipt= [
+                 'amount' => $product[0]->amount,
+                 'cause' => $product[0]->cause,
+                 'type' => $product[0]->type,
+                 'enforcement_date_payment' => $product[0]->enforcement_date_payment,
+                 'enforced_license_plate' => $product[0]->enforced_license_plate,
+             ];
+
+                return [
+                    'data' =>  $receipt,
+                    'status' =>  true,
+                    'responseCode' =>  200,
+                    'message' => "enforcement paid successfully."
+                ];
 
             } else {
 

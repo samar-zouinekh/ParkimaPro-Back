@@ -53,7 +53,6 @@ class BmoovController extends Controller
     public static function saveEnforcement($data)
     {
         app('db')->insert('insert into enforcements (parking_id, agent_shift, agent_name, enforcement_date, type, gravity, cause, amount, payment_status, payment_methode, enforcement_reference, enforced_license_plate, enforced_phone_number, enforced_car_picture) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
-        //  dd($data),
             $data['parking'],
             $data['agent_shift'],
             $data['agent_name'],
