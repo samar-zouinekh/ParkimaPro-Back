@@ -161,7 +161,7 @@ class EnforcementController extends Controller
                 ) . ' ' . ($result[0]->symbol ?? ''),
                 'enforced_license_plate' => $request->license_plate,
                 'enforced_phone_number' => $request->phone_number,
-                'enforcement_reference' =>$enforcement_reference
+                'enforcement_reference' => $enforcement_reference
             ];
 
             return [
@@ -196,12 +196,31 @@ class EnforcementController extends Controller
 
         if ($result) {
 
+            $paid =  app('db')->select(
+                'select enforced_license_plate, payment_methode
+            from enforcements
+            where enforcements.enforced_license_plate = ?
+            order by id desc limit 1',
+                [$request->enforced_license_plate]
+            );
+
+            if ($paid[0]->payment_methode == null) {
+
+                return [
+                    'data' =>  $result,
+                    'status' =>  true,
+                    'responseCode' =>  200,
+                    'message' => "plate enforced."
+                ];
+            }
+
             return [
-                'data' =>  $result,
+                'data' =>  $paid,
                 'status' =>  true,
                 'responseCode' =>  200,
-                'message' => "plate enforced."
+                'message' => "enforcement paid."
             ];
+            
         } else {
 
             return [
@@ -344,7 +363,7 @@ class EnforcementController extends Controller
         and parkings.id = ? limit 1',
             [$request->parking_id]
         );
-// dd($result[0]->type );
+        // dd($result[0]->type );
         if ($result[0]->type == "Ugateway") {
 
             if ($result[0]->parking_type == "on_street") {
@@ -380,18 +399,18 @@ class EnforcementController extends Controller
 
                 $gateway_payment = app('p-connector')->profile('ugateway');
                 $gateway_payment->post('cash/pay', $data);
-            
+
                 if ($gateway_payment->responseCodeNot(200)) {
-                    
-                    $data['payment_status'] = 'failed';   
-                    
+
+                    $data['payment_status'] = 'failed';
+
                     return response()->json([
                         'message' => trans_db('validation', 'missing shift ID'),
                         'success' => false,
                     ], 200);
                 }
 
-                $data['payment_status'] = 'booked';   
+                $data['payment_status'] = 'booked';
 
                 if ($data['payment_status'] === 'paid' || $data['payment_status'] === 'booked') {
 
@@ -405,7 +424,7 @@ class EnforcementController extends Controller
                         [$request->enforced_license_plate, $request->enforcement_reference]
                     );
 
-        //  dd($product);
+                    //  dd($product);
 
                     // $enforcement_reference = $data['enforcement_reference'] . '-' . $gateway_shift->shift_id;
                     $status = 'booked';
@@ -416,9 +435,8 @@ class EnforcementController extends Controller
                     order by id desc limit 1',
                         [$request->enforced_license_plate, $request->enforcement_reference]
                     );
-
                 } else {
-                   
+
                     $status = 'failed';
                     $payment_methode = 'cash-payment';
 
@@ -437,13 +455,13 @@ class EnforcementController extends Controller
                     [$request->enforced_license_plate, $request->enforcement_reference]
                 );
 
-             $receipt= [
-                 'amount' => $product[0]->amount,
-                 'cause' => $product[0]->cause,
-                 'type' => $product[0]->type,
-                 'enforcement_date_payment' => $product[0]->enforcement_date_payment,
-                 'enforced_license_plate' => $product[0]->enforced_license_plate,
-             ];
+                $receipt = [
+                    'amount' => $product[0]->amount,
+                    'cause' => $product[0]->cause,
+                    'type' => $product[0]->type,
+                    'enforcement_date_payment' => $product[0]->enforcement_date_payment,
+                    'enforced_license_plate' => $product[0]->enforced_license_plate,
+                ];
 
                 return [
                     'data' =>  $receipt,
@@ -451,7 +469,6 @@ class EnforcementController extends Controller
                     'responseCode' =>  200,
                     'message' => "enforcement paid successfully."
                 ];
-
             } else {
 
                 return [
