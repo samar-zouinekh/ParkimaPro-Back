@@ -383,16 +383,16 @@ class LicensePlateController extends Controller
                 ];
             }
 
-     
-            $product = array();
-
             $data = [
                 'operator_id' => $result[0]->operator_id,
                 'parking_id' => $result[0]->parking_id,
+                'license_plate' =>  $request->license_plate,
+                'pom_desc' =>  "---",
             ];
 
+
             $ugateway = app('p-connector')->profile('ugateway');
-            $ugateway->get('session/status/list', $data);
+            $ugateway->get('session/status', $data);
 
             if ($ugateway->responseCodeNot(200)) {
                 return response()->json([
@@ -401,48 +401,16 @@ class LicensePlateController extends Controller
                 ], 200);
             }
             
-            $firstCollection = collect($product)->keyBy('payment_reference')->toArray();
-            $secondCollection = collect($ugateway->getResponseBody() ?? [])->keyBy('payment_reference')->toArray();
 
-            $tab = [];
-            foreach ($firstCollection as $paymentReference => $item) {
-                if ($item['payment_reference'] == $paymentReference) {
-                    $tab[$paymentReference] = [
-                        'licensePlate' => $item['licensePlate'],
-                        'payment_reference' => $item['payment_reference'],
-                        'plate_info' => $item['plate_info'],
-                        'phone_number' => $item['phone_number'],
-                        'expiry_date' => !empty($secondCollection[$paymentReference]->expiry_date) ? $secondCollection[$paymentReference]->expiry_date : null,
-                        'status' => !empty($secondCollection[$paymentReference]->status) ? $secondCollection[$paymentReference]->status : null,
-                        'ticket_duration' => !empty($secondCollection[$paymentReference]->ticket_duration) ? $secondCollection[$paymentReference]->ticket_duration : null,
-                        'duration_remaining' => !empty($secondCollection[$paymentReference]->duration_remaining) ? $secondCollection[$paymentReference]->duration_remaining : null,
-
-                    ];
-                }
-            }
-
-            $tab = collect($tab)->sortByDesc('expiry_date');
-
-            $tab2 = [];
-            foreach ($tab as $expiry_date => $item) {
-                if (!empty($item["expiry_date"])) {
-                    array_push($tab2, $item);
-                }
-            }
-
-            $tab3 = [];
-            foreach ($tab2 as $licensePlate => $item) {
-                if (!isset($item[$licensePlate])) {
-                    array_push($tab3, $item);
-                }
-            }
+           $status = $ugateway->getResponseBody();
 
             return [
-                'data' =>  $tab3,
+                'data' =>  $status,
                 'status' =>  true,
                 'responseCode' =>  200,
                 'message' => "License plate list."
             ];
+
         } catch (\Throwable $th) {
             app('log')->error($th->getMessage());
             return [
