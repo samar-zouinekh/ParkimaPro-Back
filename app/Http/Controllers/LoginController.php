@@ -169,6 +169,7 @@ class LoginController extends Controller
 
             // $otp = rand(100000, 999999);
             // $otp = 1234;
+        
 
             $this->sendOtp(rand(1000, 9999), '216'.$request->phone) ?
             $this->smsSendingSuccess('216'.$request->phone) : $this->smsSendingFailure();
@@ -222,12 +223,10 @@ class LoginController extends Controller
 
     public function phoneVerify(PhoneVerifyRequest $request)
     {
-        // $this->verifySms($request->code, $request->phone) ?
+        $otp = $this->verifySms($request->otp, '216'.$request->phone) ;
         // $this->verificationCodeSuccessResponse() : $this->verificationCodeFailureResponse();
 
-        $otp = app('cache')->get('216'.$request->phone);
-
-        if ($request->otp != $otp) {
+        if ($otp == false) {
             return [
                 'error' => [],
                 'status' =>  false,
@@ -236,7 +235,7 @@ class LoginController extends Controller
             ];
         }
 
-        if ($otp == $request->otp) {
+            if ($otp == true) {
             $agent = app('db')->select(
                 'SELECT admins.id, admins.name AS admin_name, admins.email, admins.phone,
                 roles.id AS role_id, roles.name AS role_name, roles.guard_name
