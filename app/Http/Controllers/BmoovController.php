@@ -24,6 +24,7 @@ class BmoovController extends Controller
             $data['payment_type'],
         ]);
     }
+    
   /**
      * Update a transaction by it's reference.
      *

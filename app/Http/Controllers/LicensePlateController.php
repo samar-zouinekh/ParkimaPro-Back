@@ -408,7 +408,7 @@ class LicensePlateController extends Controller
                 'data' =>  $status,
                 'status' =>  true,
                 'responseCode' =>  200,
-                'message' => "License plate list."
+                'message' => "License plate status."
             ];
 
         } catch (\Throwable $th) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PaymentRequest;
+use App\Http\Requests\TicketRequest;
 use App\Providers\TenancyServiceProvider as ProvidersTenancyServiceProvider;
 use Illuminate\Http\Request;
 use App\Tenancy\TenancyServiceProvider;
@@ -36,7 +37,7 @@ class PaymentController extends Controller
         return response()->json(compact('options'), 200);
     }
 
-    public function payment(PaymentRequest $request)
+    public function postPayment(PaymentRequest $request)
     {
 
         try {
@@ -118,7 +119,7 @@ class PaymentController extends Controller
                             'phone_number' => $request->phone_number,
                             'type' => $ticket_type,
                             'value' => $ticket_value,
-                            'parking_spot_description' => $request->parking_spot_description,
+                            'parking_spot_description' => "Default",
                             'entry_datetime' => (new DateTime($ugateway->ticket_entry_time))->format(locale_datetime_format()),
                             'payment_datetime' => (new DateTime('now', new DateTimeZone($result[0]->timezone_offset ?? 'UTC')))->format('Y-m-d H:i:s'),
                             'duration' => CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
@@ -183,7 +184,6 @@ class PaymentController extends Controller
                             ], 200);
                         }
                     }
-                    
                 } else {
                     return [
                         'error' =>  [],
@@ -229,6 +229,302 @@ class PaymentController extends Controller
                 'responseCode' =>  500,
                 'message' => "Server error."
             ];
+        }
+    }
+
+
+    public function prePayment(TicketRequest $request)
+    {
+        // dd('hi');
+
+        $database = app('db');
+
+        // get the parking_id and operator_id ready to be sent to entervo
+        $result = $database->select(
+            'select parkings.paid_grace_period, gateways.shift_id, gateways.parking_type, gateways.type, gateways.cashier_contract_id, gateways.cashier_consumer_id, gateways.shift_sub_user,  parkings.promotion_id, currencies.round, currencies.fractional_part, currencies.symbol, currencies.code, gateways.parking_id, gateways.timezone_offset, operators.operator_id
+                from parkings, gateways, operators, currencies
+                where parkings.gateway_id = gateways.id
+                and gateways.operator_id = operators.id
+                and gateways.currency_id = currencies.id
+                and parkings.id = ? limit 1',
+            [$request->parking_id]
+        );
+
+        // choose the profile to use
+        if ($result[0]->type == "Ugateway") {
+
+            if ($result[0]->parking_type == "on_street") {
+
+                $payment_type = 'pre_payment';
+
+                $data = [
+                    'operator_id' => (int)$result[0]->operator_id,
+                    'parking_id' => (int)$result[0]->parking_id,
+                    'ticket_duration' => $request->ticket_duration,
+                    'license_plate' => $request->license_plate,
+                    'pom_desc' => "Default",
+                    'promotion' => 0,
+                ];
+
+                // check if shift is valid
+                $dataShift = [
+                    'operator_id' => (int)$result[0]->operator_id,
+                    'parking_id' => (int)$result[0]->parking_id,
+                    'user_id' => (int)$result[0]->cashier_consumer_id,
+                ];
+
+                $ugateway = app('p-connector')->profile('ugateway');
+                $ugateway->get('shift', $dataShift);
+
+                if ($ugateway->responseCodeNot(200)) {
+                    return response()->json([
+                        'message' => trans_db('validation', 'payment_ugateway_down'),
+                        'success' => false,
+                    ], 200);
+                }
+
+                /** @var \MedianetDev\PConnector\PConnector $payment */
+
+                $ugateway = app('p-connector')->profile('ugateway');
+                $ugateway->get('media/prePayment/consult', $data);
+
+
+                if ($ugateway->responseCodeNot(200)) {
+                    return response()->json([
+                        'message' => trans_db('validation', 'payment_ugateway_down'),
+                        'success' => false,
+                    ], 200);
+                }
+
+                $ticket_type =  'Parkimapro_prepayment';
+                $reference = rand(100000, 999999);
+                $tariff_class = null;
+                $promotion_id = null;
+
+                $payment = [
+                    'parking' => $request->parking_id,
+                    'product' => json_encode([
+                        'parking_id' => $request->parking_id,
+                        'license_plate' => $request->ticket_value,
+                        'plate_info' => $request->plate_info,
+                        'phone_number' => $request->phone_number,
+                        'type' => $ticket_type,
+                        'value' => $reference,
+                        'parking_spot_description' => "Default",
+                        'entry_datetime' => (new DateTime($ugateway->ticket_entry_time))->format(locale_datetime_format()),
+                        'duration' => CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
+                            ->locale(app()->getLocale())->forHumans(['parts' => 4, 'join' => true]),
+                        'amount' => number_format(
+                            $ugateway->ticket_amount / ($result[0]->round ?? 1),
+                            $result[0]->fractional_part ?? 3
+                        ) . ' ' . ($result[0]->symbol ?? ''),
+                        'ticket_expiration_time' => (new DateTime($ugateway->ticket_expiration_time))->format(locale_datetime_format()),
+                        'end_tariff_time' => $ugateway->ticket_expiration_time,
+                    ]),
+                    'provider' => "cash_payment",
+                    'amount' => number_format($ugateway->ticket_amount / pow(10,  $result[0]->fractional_part), 3, '.', ''),
+                    'original_amount' => $ugateway->amount_ht / pow(10,  $result[0]->fractional_part),
+                    'tariff_class' => $tariff_class,
+                    'currency' => $result[0]->code,
+                    'promotion_id' => $promotion_id,
+                    'payment_type' => $payment_type,
+                ];
+                BmoovController::saveTransaction($payment, $reference);
+
+                $gateway_data = [
+                    'parking_id' => (int)$result[0]->parking_id,
+                    'operator_id' => (int)$result[0]->operator_id,
+                    'ticket_entry_time' => $ugateway->ticket_entry_time,
+                    'ticket_duration' => $request->ticket_duration,
+                    'ticket_amount' => $ugateway->ticket_amount,
+                    'pom_desc' => "Default",
+                    'license_plate' => $request->license_plate,
+                    'shift_sub_user_id' => (int)$result[0]->shift_sub_user,
+                    'ticket_expiration_time' => $ugateway->ticket_expiration_time,
+                    'payment_reference' => $reference,
+                ];
+                
+                /** @var \MedianetDev\PConnector\PConnector $payment */
+                
+                $ugateway = app('p-connector')->profile('ugateway');
+                $ugateway->post('prePayment', $gateway_data);
+             
+                if ($ugateway->responseCodeNot(200)) {
+                    return response()->json([
+                        'message' => trans_db('validation', 'payment_ugateway_down'),
+                        'success' => false,
+                    ], 200);
+                }  
+    
+                if ($ugateway->getResponseStatusCode() !== 204 && $ugateway->getResponseStatusCode() !== 200) {
+                    // we should schedule this as cron task
+                    $ugateway->log();
+                } else {
+                    BmoovController::updateTransaction($reference, 'booked', (int)$result[0]->shift_id);
+
+                }
+
+            return [
+                'data' =>  $result,
+                'status' =>  true,
+                'responseCode' =>  200,
+                'message' => "payment done successfully."
+            ];
+
+            } else {
+
+                return response()->json(['message' => 'This is an off street parking'], 500);
+            }
+        }
+    }
+
+
+
+
+
+
+    public function extension(TicketRequest $request)
+    {
+        // dd('hi');
+
+        $database = app('db');
+
+        // get the parking_id and operator_id ready to be sent to entervo
+        $result = $database->select(
+            'select parkings.paid_grace_period, gateways.shift_id, gateways.parking_type, gateways.type, gateways.cashier_contract_id, gateways.cashier_consumer_id, gateways.shift_sub_user,  parkings.promotion_id, currencies.round, currencies.fractional_part, currencies.symbol, currencies.code, gateways.parking_id, gateways.timezone_offset, operators.operator_id
+                from parkings, gateways, operators, currencies
+                where parkings.gateway_id = gateways.id
+                and gateways.operator_id = operators.id
+                and gateways.currency_id = currencies.id
+                and parkings.id = ? limit 1',
+            [$request->parking_id]
+        );
+
+        // choose the profile to use
+        if ($result[0]->type == "Ugateway") {
+
+            if ($result[0]->parking_type == "on_street") {
+
+                $payment_type = 'pre_payment_extension';
+
+                $data = [
+                    'operator_id' => (int)$result[0]->operator_id,
+                    'parking_id' => (int)$result[0]->parking_id,
+                    'ticket_duration' => $request->ticket_duration,
+                    'license_plate' => $request->license_plate,
+                    'pom_desc' => "Default",
+                    'promotion' => 0,
+                ];
+
+                // check if shift is valid
+                $dataShift = [
+                    'operator_id' => (int)$result[0]->operator_id,
+                    'parking_id' => (int)$result[0]->parking_id,
+                    'user_id' => (int)$result[0]->cashier_consumer_id,
+                ];
+
+                $ugateway = app('p-connector')->profile('ugateway');
+                $ugateway->get('shift', $dataShift);
+
+                if ($ugateway->responseCodeNot(200)) {
+                    return response()->json([
+                        'message' => trans_db('validation', 'payment_ugateway_down'),
+                        'success' => false,
+                    ], 200);
+                }
+
+                /** @var \MedianetDev\PConnector\PConnector $payment */
+                $ugateway = app('p-connector')->profile('ugateway');
+                $ugateway->get('media/extension/consult', $data);
+                
+                
+                if ($ugateway->responseCodeNot(200)) {
+                    return response()->json([
+                        'message' => trans_db('validation', 'payment_ugateway_down'),
+                        'success' => false,
+                    ], 200);
+                }
+                
+                    
+                $ticket_type =  'Parkimapro_prepayment';
+                $reference = rand(100000, 999999);
+                $tariff_class = null;
+                $promotion_id = null;
+
+                $payment = [
+                    'parking' => $request->parking_id,
+                    'product' => json_encode([
+                        'parking_id' => $request->parking_id,
+                        'license_plate' => $request->ticket_value,
+                        'plate_info' => $request->plate_info,
+                        'phone_number' => $request->phone_number,
+                        'type' => $ticket_type,
+                        'value' => $reference,
+                        'parking_spot_description' => "Default",
+                        'entry_datetime' => (new DateTime($ugateway->ticket_entry_time))->format(locale_datetime_format()),
+                        'duration' => CarbonInterval::create(iso8601_duration($ugateway->ticket_duration))
+                            ->locale(app()->getLocale())->forHumans(['parts' => 4, 'join' => true]),
+                        'amount' => number_format(
+                            $ugateway->ticket_amount / ($result[0]->round ?? 1),
+                            $result[0]->fractional_part ?? 3
+                        ) . ' ' . ($result[0]->symbol ?? ''),
+                        'ticket_expiration_time' => (new DateTime($ugateway->ticket_expiration_time))->format(locale_datetime_format()),
+                        'end_tariff_time' => $ugateway->ticket_expiration_time,
+                    ]),
+                    'provider' => "cash_payment",
+                    'amount' => number_format($ugateway->ticket_amount / pow(10,  $result[0]->fractional_part), 3, '.', ''),
+                    'original_amount' => $ugateway->amount_ht / pow(10,  $result[0]->fractional_part),
+                    'tariff_class' => $tariff_class,
+                    'currency' => $result[0]->code,
+                    'promotion_id' => $promotion_id,
+                    'payment_type' => $payment_type,
+                ];
+                BmoovController::saveTransaction($payment, $reference);
+                $gateway_data = [
+                    'parking_id' => (int)$result[0]->parking_id,
+                    'operator_id' => (int)$result[0]->operator_id,
+                    'ticket_entry_time' => $ugateway->ticket_entry_time,
+                    'ticket_duration' => $request->ticket_duration,
+                    'ticket_amount' => $ugateway->ticket_amount,
+                    'pom_desc' => "Default",
+                    'license_plate' => $request->license_plate,
+                    'shift_sub_user_id' => (int)$result[0]->shift_sub_user,
+                    'ticket_expiration_time' => Carbon::parse($ugateway->ticket_expiration_time)->format('Y-m-d H:i:s'),
+                    'payment_reference' => $reference,
+                ];
+                
+
+
+                /** @var \MedianetDev\PConnector\PConnector $payment */              
+                $ugateway = app('p-connector')->profile('ugateway');
+                $ugateway->post('payExtension', $gateway_data);
+              
+                if ($ugateway->responseCodeNot(200)) {
+                    return response()->json([
+                        'message' => trans_db('validation', 'payment_ugateway_down'),
+                        'success' => false,
+                    ], 200);
+                }  
+    
+                if ($ugateway->getResponseStatusCode() !== 204 && $ugateway->getResponseStatusCode() !== 200) {
+                    // we should schedule this as cron task
+                    $ugateway->log();
+                } else {
+                    BmoovController::updateTransaction($reference, 'booked', (int)$result[0]->shift_id);
+
+                }
+
+            return [
+                'data' =>  $result,
+                'status' =>  true,
+                'responseCode' =>  200,
+                'message' => "payment done successfully."
+            ];
+
+            } else {
+
+                return response()->json(['message' => 'This is an off street parking'], 500);
+            }
         }
     }
 

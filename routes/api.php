@@ -36,7 +36,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('ticket/consult',  [TicketController::class, 'consultTicket']);
     
     Route::get('payment/options',  [PaymentController::class, 'options']);
-    Route::post('payment',  [PaymentController::class, 'payment']);
+    Route::post('payment',  [PaymentController::class, 'postPayment']);
+    Route::post('prepayment',  [PaymentController::class, 'prePayment']);
+    Route::post('extension',  [PaymentController::class, 'extension']);
 
     Route::post('check/shift',  [ShiftController::class, 'checkShift']);
     Route::post('open/shift',  [ShiftController::class, 'openShift']);
