@@ -305,7 +305,7 @@ class PaymentController extends Controller
                     'parking' => $request->parking_id,
                     'product' => json_encode([
                         'parking_id' => $request->parking_id,
-                        'license_plate' => $request->ticket_value,
+                        'license_plate' => $request->license_plate,
                         'plate_info' => $request->plate_info,
                         'phone_number' => $request->phone_number,
                         'type' => $ticket_type,
@@ -329,6 +329,7 @@ class PaymentController extends Controller
                     'promotion_id' => $promotion_id,
                     'payment_type' => $payment_type,
                 ];
+
                 BmoovController::saveTransaction($payment, $reference);
 
                 $gateway_data = [
@@ -377,10 +378,6 @@ class PaymentController extends Controller
             }
         }
     }
-
-
-
-
 
 
     public function extension(TicketRequest $request)
@@ -455,7 +452,7 @@ class PaymentController extends Controller
                     'parking' => $request->parking_id,
                     'product' => json_encode([
                         'parking_id' => $request->parking_id,
-                        'license_plate' => $request->ticket_value,
+                        'license_plate' => $request->license_plate,
                         'plate_info' => $request->plate_info,
                         'phone_number' => $request->phone_number,
                         'type' => $ticket_type,
@@ -479,7 +476,9 @@ class PaymentController extends Controller
                     'promotion_id' => $promotion_id,
                     'payment_type' => $payment_type,
                 ];
+                
                 BmoovController::saveTransaction($payment, $reference);
+                
                 $gateway_data = [
                     'parking_id' => (int)$result[0]->parking_id,
                     'operator_id' => (int)$result[0]->operator_id,
