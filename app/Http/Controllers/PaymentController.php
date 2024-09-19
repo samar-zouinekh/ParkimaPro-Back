@@ -235,7 +235,6 @@ class PaymentController extends Controller
 
     public function prePayment(TicketRequest $request)
     {
-        // dd('hi');
 
         $database = app('db');
 
@@ -278,10 +277,11 @@ class PaymentController extends Controller
 
                 if ($ugateway->responseCodeNot(200)) {
                     return response()->json([
-                        'message' => trans_db('validation', 'payment_ugateway_down'),
+                        'message' => trans_db('validation', 'shift not found'),
                         'success' => false,
                     ], 200);
                 }
+                // dd('hi');
 
                 /** @var \MedianetDev\PConnector\PConnector $payment */
 
@@ -366,7 +366,7 @@ class PaymentController extends Controller
                 }
 
             return [
-                'data' =>  $result,
+                'data' =>  $gateway_data,
                 'status' =>  true,
                 'responseCode' =>  200,
                 'message' => "payment done successfully."
@@ -441,8 +441,7 @@ class PaymentController extends Controller
                         'success' => false,
                     ], 200);
                 }
-                
-                    
+                     
                 $ticket_type =  'Parkimapro_prepayment';
                 $reference = rand(100000, 999999);
                 $tariff_class = null;
@@ -514,7 +513,7 @@ class PaymentController extends Controller
                 }
 
             return [
-                'data' =>  $result,
+                'data' =>  $gateway_data,
                 'status' =>  true,
                 'responseCode' =>  200,
                 'message' => "payment done successfully."

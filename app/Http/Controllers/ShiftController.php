@@ -25,8 +25,6 @@ class ShiftController extends Controller
 
             if ($result[0]->type == "Ugateway") {
 
-                // if ($result[0]->parking_type == "off_street") {
-
                     if ((int)$result[0]->cashier_consumer_id) {
 
                         // Check for an open shift
@@ -56,14 +54,6 @@ class ShiftController extends Controller
                             'message' => "open shift is founded."
                         ];
                     }
-                // }
-
-                // return [
-                //     'error' =>  [],
-                //     'status' =>  false,
-                //     'responseCode' =>  500,
-                //     'message' => "wrong or missing parking type."
-                // ];
             }
         } catch (\Throwable $th) {
 
@@ -94,8 +84,6 @@ class ShiftController extends Controller
             );
 
             if ($result[0]->type == "Ugateway") {
-
-                // if ($result[0]->parking_type == "off_street") {
 
                     if ((int)$result[0]->cashier_consumer_id) {
 
@@ -193,14 +181,6 @@ class ShiftController extends Controller
                         'message' => "wrong or missing shift user."
                     ];
                 }
-
-            //     return [
-            //         'error' =>  [],
-            //         'status' =>  false,
-            //         'responseCode' =>  500,
-            //         'message' => "wrong or missing parking type."
-            //     ];
-            // }
         } catch (\Throwable $th) {
 
             app('log')->error($th->getMessage());
@@ -229,8 +209,6 @@ class ShiftController extends Controller
             );
 
             if ($result[0]->type == "Ugateway") {
-
-                // if ($result[0]->parking_type == "off_street") {
 
                     if ((int)$result[0]->cashier_consumer_id) {
 
@@ -312,14 +290,7 @@ class ShiftController extends Controller
                         'responseCode' =>  404,
                         'message' => "wrong or missing shift user."
                     ];
-                // }
 
-                // return [
-                //     'error' =>  [],
-                //     'status' =>  false,
-                //     'responseCode' =>  500,
-                //     'message' => "wrong or missing parking type."
-                // ];
             }
         } catch (\Throwable $th) {
 
