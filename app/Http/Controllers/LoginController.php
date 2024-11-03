@@ -313,7 +313,6 @@ class LoginController extends Controller
             $success = [];
             $success['access_token'] = $user->createToken('ApiToken')->accessToken;
             $success['user'] = $successAgent;
-            // dd($success);
             app('cache')->forget('216'.$request->phone);
 
             return [

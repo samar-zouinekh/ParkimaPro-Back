@@ -133,8 +133,6 @@ class PaymentController extends Controller
                         'payment_type' => $payment_type,
                     ];
 
-                    // dd($transaction_data);
-
                     $originalDatetime = Carbon::createFromFormat('YmdHis', $ugateway->ticket_entry_time);
                     $ticket_entry_time = $originalDatetime->format('Y-m-d H:i:s');
 
@@ -151,7 +149,7 @@ class PaymentController extends Controller
                         'ticket_entry_time' => $ticket_entry_time,
                         'ticket_duration' => $totalDurationInHours,
                         'ticket_amount' => $ugateway->ticket_amount,
-                        'pom_desc' => "Default",
+                        'pom_desc' =>  "---",
                         'shift_sub_user_id' => (int)$result[0]->shift_sub_user,
                         'license_plate' => $request->license_plate,
                     ];
@@ -261,7 +259,7 @@ class PaymentController extends Controller
                     'parking_id' => (int)$result[0]->parking_id,
                     'ticket_duration' => $request->ticket_duration,
                     'license_plate' => $request->license_plate,
-                    'pom_desc' => "Default",
+                    'pom_desc' => "---",
                     'promotion' => 0,
                 ];
 
@@ -281,7 +279,6 @@ class PaymentController extends Controller
                         'success' => false,
                     ], 200);
                 }
-                // dd('hi');
 
                 /** @var \MedianetDev\PConnector\PConnector $payment */
 
@@ -338,7 +335,7 @@ class PaymentController extends Controller
                     'ticket_entry_time' => $ugateway->ticket_entry_time,
                     'ticket_duration' => $request->ticket_duration,
                     'ticket_amount' => $ugateway->ticket_amount,
-                    'pom_desc' => "Default",
+                    'pom_desc' =>  "---",
                     'license_plate' => $request->license_plate,
                     'shift_sub_user_id' => (int)$result[0]->shift_sub_user,
                     'ticket_expiration_time' => $ugateway->ticket_expiration_time,
@@ -349,7 +346,7 @@ class PaymentController extends Controller
                 
                 $ugateway = app('p-connector')->profile('ugateway');
                 $ugateway->post('prePayment', $gateway_data);
-             
+            
                 if ($ugateway->responseCodeNot(200)) {
                     return response()->json([
                         'message' => trans_db('validation', 'payment_ugateway_down'),
@@ -382,8 +379,6 @@ class PaymentController extends Controller
 
     public function extension(TicketRequest $request)
     {
-        // dd('hi');
-
         $database = app('db');
 
         // get the parking_id and operator_id ready to be sent to entervo
@@ -409,7 +404,7 @@ class PaymentController extends Controller
                     'parking_id' => (int)$result[0]->parking_id,
                     'ticket_duration' => $request->ticket_duration,
                     'license_plate' => $request->license_plate,
-                    'pom_desc' => "Default",
+                    'pom_desc' =>  "---",
                     'promotion' => 0,
                 ];
 
@@ -484,7 +479,7 @@ class PaymentController extends Controller
                     'ticket_entry_time' => $ugateway->ticket_entry_time,
                     'ticket_duration' => $request->ticket_duration,
                     'ticket_amount' => $ugateway->ticket_amount,
-                    'pom_desc' => "Default",
+                    'pom_desc' =>  "---",
                     'license_plate' => $request->license_plate,
                     'shift_sub_user_id' => (int)$result[0]->shift_sub_user,
                     'ticket_expiration_time' => Carbon::parse($ugateway->ticket_expiration_time)->format('Y-m-d H:i:s'),

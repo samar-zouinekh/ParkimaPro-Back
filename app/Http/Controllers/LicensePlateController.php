@@ -384,16 +384,16 @@ class LicensePlateController extends Controller
             }
 
             $data = [
-                'operator_id' => $result[0]->operator_id,
-                'parking_id' => $result[0]->parking_id,
+                'operator_id' => (int)$result[0]->operator_id,
+                'parking_id' => (int)$result[0]->parking_id,
                 'license_plate' =>  $request->license_plate,
                 'pom_desc' =>  "---",
             ];
 
-
+            
             $ugateway = app('p-connector')->profile('ugateway');
             $ugateway->get('session/status', $data);
-
+            
             if ($ugateway->responseCodeNot(200)) {
                 return response()->json([
                     'message' => 'ugateway_down',
@@ -401,8 +401,7 @@ class LicensePlateController extends Controller
                 ], 200);
             }
             
-
-           $status = $ugateway->getResponseBody();
+            $status = $ugateway->getResponseBody();
 
             return [
                 'data' =>  $status,
