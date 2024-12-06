@@ -19,6 +19,17 @@ class TicketController extends Controller
      *      tags={"Ticket Classification"},
      *      security={{"bearerAuth": {}}},
      *      summary="Create Postpayment Ticket",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     * ),
+     * 
      *      @OA\Parameter(
      *          name="parking_id",
      *          required=true,
@@ -129,6 +140,17 @@ class TicketController extends Controller
      *      tags={"Ticket Classification"},
      *      security={{"bearerAuth":{}}},
      *      summary="Create Postpayment Ticket",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     * ),
+     * 
      *      @OA\Parameter(
      *          name="parking_id",
      *          required=true,

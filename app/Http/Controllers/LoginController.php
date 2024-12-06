@@ -24,6 +24,17 @@ class LoginController extends Controller
      *     path="/api/check/password",
      *     tags={"Login"},
      *      summary="Check Password",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     * ),
+     * 
      *     @OA\RequestBody(
      *     required=true,
      *     @OA\MediaType(
@@ -81,6 +92,17 @@ class LoginController extends Controller
      *     path="/api/phone-auth/verification",
      *     tags={"Login"},
      *      summary="Verify phone number",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     * ),
+     * 
      *     @OA\RequestBody(
      *     required=true,
      *     @OA\MediaType(
@@ -192,6 +214,17 @@ class LoginController extends Controller
      *     path="/api/phone-auth/verify",
      *     tags={"Login"},
      *     summary="Verify otp",
+     *
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     * ),
+     * 
      *   @OA\RequestBody(
      *     required=true,
      *     @OA\MediaType(

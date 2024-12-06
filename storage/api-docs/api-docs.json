@@ -7,13 +7,12 @@
     "servers": [
         {
             "url": "http://demo.pro.bmoov.test",
-            "description": " server"
+            "description": "API server"
         },
         {
             "url": "http://demo.pro.bmoov.co",
-            "description": " server"
+            "description": "API server"
         }
-
     ],
     "paths": {
         "/api/check/password": {
@@ -23,6 +22,17 @@
                 ],
                 "summary": "Check Password",
                 "operationId": "427589bfe5064921605e220967cd2cae",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -64,6 +74,17 @@
                 ],
                 "summary": "Verify phone number",
                 "operationId": "40acad40e4b8728cf65108482bbe276e",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -105,6 +126,17 @@
                 ],
                 "summary": "Verify otp",
                 "operationId": "2fb2d401000cea7834eebe69750709a7",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -152,6 +184,15 @@
                 "operationId": "createTicket",
                 "parameters": [
                     {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
                         "name": "parking_id",
                         "in": "query",
                         "required": true,
@@ -197,6 +238,15 @@
                 "summary": "Create Postpayment Ticket",
                 "operationId": "consultTicket",
                 "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
                     {
                         "name": "parking_id",
                         "in": "query",

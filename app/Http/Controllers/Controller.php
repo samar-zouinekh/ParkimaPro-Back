@@ -26,7 +26,7 @@ use Illuminate\Routing\Controller as BaseController;
  * 
  * @OA\Server(
  *     url="http://demo.pro.bmoov.test",
- *     description="Server"
+ *     description="API server"
  * )
  */
 
