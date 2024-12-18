@@ -28,33 +28,33 @@ Route::post('check/password',  [LoginController::class, 'checkPassword'])->witho
 Route::put('phone-auth/verification',  [LoginController::class, 'phoneVerification'])->withoutMiddleware(['auth:api']);
 Route::put('phone-auth/verify',  [LoginController::class, 'phoneVerify'])->withoutMiddleware(['auth:api']);
 
-Route::middleware('auth:api')->group(function () {
+// Route::middleware('auth:api')->group(function () {
 
-    Route::get('parkings',  [LoginController::class, 'getParkingOnStreetList']);
+//     Route::get('parkings',  [LoginController::class, 'getParkingOnStreetList']);
 
-    Route::get('entryTicket/create',  [TicketController::class, 'entryTicket']);
-    Route::get('ticket/consult',  [TicketController::class, 'consultTicket']);
+//     Route::get('entryTicket/create',  [TicketController::class, 'entryTicket']);
+//     Route::get('ticket/consult',  [TicketController::class, 'consultTicket']);
     
-    Route::get('payment/options',  [PaymentController::class, 'options']);
-    Route::post('payment',  [PaymentController::class, 'postPayment']);
-    Route::post('prepayment',  [PaymentController::class, 'prePayment']);
-    Route::post('extension',  [PaymentController::class, 'extension']);
+//     Route::get('payment/options',  [PaymentController::class, 'options']);
+//     Route::post('payment',  [PaymentController::class, 'postPayment']);
+//     Route::post('prepayment',  [PaymentController::class, 'prePayment']);
+//     Route::post('extension',  [PaymentController::class, 'extension']);
 
-    Route::post('check/shift',  [ShiftController::class, 'checkShift']);
-    Route::post('open/shift',  [ShiftController::class, 'openShift']);
-    Route::post('close/shift',  [ShiftController::class, 'closeShift']);
+//     Route::post('check/shift',  [ShiftController::class, 'checkShift']);
+//     Route::post('open/shift',  [ShiftController::class, 'openShift']);
+//     Route::post('close/shift',  [ShiftController::class, 'closeShift']);
 
-    Route::get('get/counting',  [CountingController::class, 'getCounting']);
-    Route::post('edit/counting',  [CountingController::class, 'editCounting']);
+//     Route::get('get/counting',  [CountingController::class, 'getCounting']);
+//     Route::post('edit/counting',  [CountingController::class, 'editCounting']);
 
-    Route::get('get/plate/list',  [LicensePlateController::class, 'plateList']);
-    Route::get('get/plate',  [LicensePlateController::class, 'plateStatus']);
+//     Route::get('get/plate/list',  [LicensePlateController::class, 'plateList']);
+//     Route::get('get/plate',  [LicensePlateController::class, 'plateStatus']);
 
-    Route::get('get/products',  [EnforcementController::class, 'getProduct']);
-    Route::get('check/enforcement',  [EnforcementController::class, 'checkEnforcement']);
-    Route::post('make/enforcement',  [EnforcementController::class, 'makeEnforcement']);
+//     Route::get('get/products',  [EnforcementController::class, 'getProduct']);
+//     Route::get('check/enforcement',  [EnforcementController::class, 'checkEnforcement']);
+//     Route::post('make/enforcement',  [EnforcementController::class, 'makeEnforcement']);
     
-    Route::post('pay/enforcement',  [EnforcementController::class, 'payEnforcement']);
-    Route::post('cashPay/enforcement',  [EnforcementController::class, 'cashPayEnforcement']);
+//     Route::post('pay/enforcement',  [EnforcementController::class, 'payEnforcement']);
+//     Route::post('cashPay/enforcement',  [EnforcementController::class, 'cashPayEnforcement']);
 
-});
+// });
