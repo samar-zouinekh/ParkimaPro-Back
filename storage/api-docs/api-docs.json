@@ -6,10 +6,6 @@
     },
     "servers": [
         {
-            "url": "http://demo.pro.bmoov.test",
-            "description": "API server"
-        },
-        {
             "url": "http://demo.pro.bmoov.co",
             "description": "API server"
         }
