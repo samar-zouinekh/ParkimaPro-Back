@@ -14,6 +14,17 @@ use Illuminate\Routing\Controller as BaseController;
  *     version="0.1"
  * )
  * 
+ * @OA\Parameter(
+ *     name="Accept",
+ *     in="header",
+ *     required=true,
+ *     @OA\Schema(
+ *         type="string",
+ *         default="application/json"
+ *     ),
+ *     description="The media type accepted by the client"
+ * )
+ * 
  * @OA\SecurityScheme(
  *     type="http",
  *     description="Authentication Bearer Token",
@@ -21,7 +32,7 @@ use Illuminate\Routing\Controller as BaseController;
  *     in="header",
  *     scheme="bearer",
  *     bearerFormat="JWT",
- *     securityScheme="bearerAuth" 
+ *     securityScheme="bearerAuth"
  * )
  * 
  * @OA\Server(
@@ -29,6 +40,7 @@ use Illuminate\Routing\Controller as BaseController;
  *     description="API server"
  * )
  */
+
 
 class Controller extends BaseController
 {

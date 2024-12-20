@@ -299,6 +299,18 @@
         }
     },
     "components": {
+        "parameters": {
+            "Accept": {
+                "name": "Accept",
+                "in": "header",
+                "description": "The media type accepted by the client",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "default": "application/json"
+                }
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
