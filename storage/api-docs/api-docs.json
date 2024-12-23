@@ -308,12 +308,8 @@
             }
         },
         "securitySchemes": {
-            "bearerAuth": {
+            "ServerAuthBearer": {
                 "type": "http",
-                "description": "Authentication Bearer Token",
-                "name": "Authorization",
-                "in": "header",
-                "bearerFormat": "JWT",
                 "scheme": "bearer"
             }
         }

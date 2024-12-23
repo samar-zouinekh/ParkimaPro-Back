@@ -35,16 +35,13 @@ class LoginController extends Controller
      *     description="The media type accepted by the client"
      * )
      * 
-     * @OA\SecurityScheme(
-     *     type="http",
-     *     description="Authentication Bearer Token",
-     *     name="Authorization",
-     *     in="header",
-     *     scheme="bearer",
-     *     bearerFormat="JWT",
-     *     securityScheme="bearerAuth"
-     * )
      * 
+     * @OA\SecurityScheme(
+     *     securityScheme="ServerAuthBearer",
+     *     type="http",
+     *     scheme="bearer"
+     * )
+     *
      * @OA\Server(
      *     url="http://demo.pro.bmoov.co",
      *     description="API server"
