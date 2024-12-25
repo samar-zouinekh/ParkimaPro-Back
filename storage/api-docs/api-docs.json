@@ -317,5 +317,10 @@
                 "scheme": "bearer"
             }
         }
-    }
+    },
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ]
 }
