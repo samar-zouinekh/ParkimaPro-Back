@@ -174,11 +174,17 @@ return [
 
 
         'securityDefinitions' => [
+            // 'bearerAuth' => [
+            //     'type' => 'apiKey',
+            //     'name' => 'Authorization',
+            //     'in' => 'header',
+            //     'description' => 'Bearer token authentication',
+            // ],
             'bearerAuth' => [
-                'type' => 'apiKey',
-                'name' => 'Authorization',
-                'in' => 'header',
-                'description' => 'Bearer token authentication',
+                'type' => 'http',
+                'scheme' => 'bearer',
+                'bearerFormat' => 'JWT',
+                'description' => 'Provide your Bearer token',
             ],
             'securitySchemes' => [
                 /*
