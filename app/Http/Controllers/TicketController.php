@@ -52,7 +52,8 @@ class TicketController extends Controller
      *             }
      *         )
      *     ),
-     *     @OA\Response(response="401", description="Unauthorized")
+     *     @OA\Response(response="401", description="Unauthorized"),
+     *     security={{"bearerAuth": {}}}
      * )
      */
 
