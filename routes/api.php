@@ -28,11 +28,13 @@ Route::post('check/password',  [LoginController::class, 'checkPassword'])->witho
 Route::put('phone-auth/verification',  [LoginController::class, 'phoneVerification'])->withoutMiddleware(['auth:api']);
 Route::put('phone-auth/verify',  [LoginController::class, 'phoneVerify'])->withoutMiddleware(['auth:api']);
 
+
+Route::get('entryTicket/create',  [TicketController::class, 'entryTicket'])->withoutMiddleware(['auth:api']);
+
 Route::middleware('auth:api')->group(function () {
 
     Route::get('parkings',  [LoginController::class, 'getParkingOnStreetList']);
 
-    Route::get('entryTicket/create',  [TicketController::class, 'entryTicket']);
     Route::get('ticket/consult',  [TicketController::class, 'consultTicket']);
     
     Route::get('payment/options',  [PaymentController::class, 'options']);
