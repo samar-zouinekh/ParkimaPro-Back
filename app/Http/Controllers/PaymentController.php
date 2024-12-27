@@ -139,7 +139,7 @@ class PaymentController extends Controller
      * 
      *     @OA\Response(
      *         response="200",
-     *         description="check Shift",
+     *         description="make post payment",
      *         @OA\JsonContent(
      *             type="object",
      *         )
@@ -391,7 +391,7 @@ class PaymentController extends Controller
      *
      *     @OA\Response(
      *         response="200",
-     *         description="check Shift",
+     *         description="make pre payment",
      *         @OA\JsonContent(
      *             type="object",
      *         )
@@ -544,7 +544,64 @@ class PaymentController extends Controller
         }
     }
 
-
+  /**
+     * @OA\Post(
+     *      path="/api/extension",
+     *      operationId="makeExtension",
+     *      tags={"Payment"},
+     *      security={{"bearerAuth": {}}},
+     *      summary="extension Payment",
+     * 
+     *     @OA\RequestBody(
+     *     description="Station to create",
+     *     required=true,
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *            @OA\Schema(
+     *               type="object",
+     *               required={"parking_id",
+     *                         "plate_info",
+     *                         "license_plate",
+     *                         "ticket_duration",
+     *                         "phone_number"},
+     *               @OA\Property(property="parking_id", type="integer"),
+     *               @OA\Property(
+     *                    property="plate_info",
+     *                        type="array",
+     *                        @OA\Items(
+     *                          type="object",
+     *                          @OA\Property(property="type", type="string", example="tn"),
+     *                          @OA\Property(property="background", type="string", example="background"),
+     *                          @OA\Property(property="inputPartOne", type="string", example="---"),
+     *                          @OA\Property(property="inputPartTwo", type="string", example="----")
+     *                                ),
+     *                             default={
+     *                                  {
+     *                              "type": "tn",
+     *                              "background": "background",
+     *                              "inputPartOne": "---",
+     *                              "inputPartTwo": "----"
+     *                                       }
+     *                                   }
+     *                                  ),
+     *                 @OA\Property(property="license_plate", type="string"),
+     *               @OA\Property(property="ticket_duration", type="integer"),
+     *               @OA\Property(property="phone_number", type="integer"),
+     *            ),
+     *        ),
+     *    ),
+     *
+     *
+     *     @OA\Response(
+     *         response="200",
+     *         description="make extension payment",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
     public function extension(TicketRequest $request)
     {
         $database = app('db');

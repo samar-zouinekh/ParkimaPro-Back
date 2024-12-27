@@ -231,6 +231,43 @@ class LicensePlateController extends Controller
         }
     }
 
+ /**
+     * @OA\Get(
+     *      path="/api/get/plate/list",
+     *      operationId="License Plate list",
+     *      tags={"License Plate"},
+     *      security={{"bearerAuth": {}}},
+     *      summary=" Get License Plate list",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *           )
+     *        ),
+     * 
+     *      @OA\Parameter(
+     *          name="parking_id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     * 
+     *     @OA\Response(
+     *         response="200",
+     *         description="License Plate list",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
 
     public function plateList(LicensePlateRequest $request)
     {
@@ -359,6 +396,52 @@ class LicensePlateController extends Controller
     }
 
 
+ /**
+     * @OA\Get(
+     *      path="/api/get/plate",
+     *      operationId="car session status",
+     *      tags={"License Plate"},
+     *      security={{"bearerAuth": {}}},
+     *      summary=" Get Car session status",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *           )
+     *        ),
+     * 
+     *      @OA\Parameter(
+     *          name="parking_id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="license_plate",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     * 
+     *     @OA\Response(
+     *         response="200",
+     *         description="session status",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
     public function plateStatus(LicensePlateRequest $request)
     { 
         try {

@@ -11,6 +11,110 @@
         }
     ],
     "paths": {
+        "/api/get/plate/list": {
+            "get": {
+                "tags": [
+                    "License Plate"
+                ],
+                "summary": " Get License Plate list",
+                "operationId": "License Plate list",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "name": "parking_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "License Plate list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/get/plate": {
+            "get": {
+                "tags": [
+                    "License Plate"
+                ],
+                "summary": " Get Car session status",
+                "operationId": "car session status",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "name": "parking_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "license_plate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "session status",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/check/password": {
             "post": {
                 "tags": [
@@ -280,7 +384,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "check Shift",
+                        "description": "make post payment",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -373,7 +477,100 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "check Shift",
+                        "description": "make pre payment",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/extension": {
+            "post": {
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "extension Payment",
+                "operationId": "makeExtension",
+                "requestBody": {
+                    "description": "Station to create",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "parking_id",
+                                    "plate_info",
+                                    "license_plate",
+                                    "ticket_duration",
+                                    "phone_number"
+                                ],
+                                "properties": {
+                                    "parking_id": {
+                                        "type": "integer"
+                                    },
+                                    "plate_info": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "tn"
+                                                },
+                                                "background": {
+                                                    "type": "string",
+                                                    "example": "background"
+                                                },
+                                                "inputPartOne": {
+                                                    "type": "string",
+                                                    "example": "---"
+                                                },
+                                                "inputPartTwo": {
+                                                    "type": "string",
+                                                    "example": "----"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "default": [
+                                            {
+                                                "type": "tn",
+                                                "background": "background",
+                                                "inputPartOne": "---",
+                                                "inputPartTwo": "----"
+                                            }
+                                        ]
+                                    },
+                                    "license_plate": {
+                                        "type": "string"
+                                    },
+                                    "ticket_duration": {
+                                        "type": "integer"
+                                    },
+                                    "phone_number": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "make extension payment",
                         "content": {
                             "application/json": {
                                 "schema": {
