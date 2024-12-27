@@ -7,6 +7,7 @@ use App\Http\Controllers\TicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\BmoovController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ShiftController;
 
@@ -22,15 +23,15 @@ use App\Http\Controllers\ShiftController;
 */
 
 // phone auth
-Route::post('check/password',  [LoginController::class, 'checkPassword'])->withoutMiddleware(['auth:api']);
+Route::post('check/password',  [BmoovController::class, 'checkPassword'])->withoutMiddleware(['auth:api']);
 
 // phone auth
-Route::put('phone-auth/verification',  [LoginController::class, 'phoneVerification'])->withoutMiddleware(['auth:api']);
-Route::put('phone-auth/verify',  [LoginController::class, 'phoneVerify'])->withoutMiddleware(['auth:api']);
+Route::put('phone-auth/verification',  [BmoovController::class, 'phoneVerification'])->withoutMiddleware(['auth:api']);
+Route::put('phone-auth/verify',  [BmoovController::class, 'phoneVerify'])->withoutMiddleware(['auth:api']);
 
 
 Route::get('entryTicket/create',  [TicketController::class, 'entryTicket'])->withoutMiddleware(['auth:api']);
-Route::get('parkings',  [LoginController::class, 'getParkingOnStreetList'])->withoutMiddleware(['auth:api']);
+Route::get('parkings',  [BmoovController::class, 'getParkingOnStreetList'])->withoutMiddleware(['auth:api']);
 
 Route::get('ticket/consult',  [TicketController::class, 'consultTicket'])->withoutMiddleware(['auth:api']);
 

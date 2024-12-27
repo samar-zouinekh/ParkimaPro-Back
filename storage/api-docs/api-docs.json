@@ -11,6 +11,166 @@
         }
     ],
     "paths": {
+        "/api/check/password": {
+            "post": {
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Check Password",
+                "operationId": "cc99f564b4917736404a00a5b7aced20",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "password"
+                                ],
+                                "properties": {
+                                    "password": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Issue the token and return the current user info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "status": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/phone-auth/verification": {
+            "put": {
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Verify phone number",
+                "operationId": "60bc2b831a3d601c9a0391b166ff26fe",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Issue the token and return the current user info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "status": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/phone-auth/verify": {
+            "put": {
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Verify otp",
+                "operationId": "0fd3649575095bddb729daa8071c2d65",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone",
+                                    "otp"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "integer"
+                                    },
+                                    "otp": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Issue the token and return the current user info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "status": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/get/counting": {
             "get": {
                 "tags": [
@@ -495,166 +655,6 @@
                         "bearerAuth": []
                     }
                 ]
-            }
-        },
-        "/api/check/password": {
-            "post": {
-                "tags": [
-                    "Login"
-                ],
-                "summary": "Check Password",
-                "operationId": "427589bfe5064921605e220967cd2cae",
-                "parameters": [
-                    {
-                        "name": "Accept",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "default": "application/json"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "password"
-                                ],
-                                "properties": {
-                                    "password": {
-                                        "type": "integer"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Issue the token and return the current user info",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "example": {
-                                        "status": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/phone-auth/verification": {
-            "put": {
-                "tags": [
-                    "Login"
-                ],
-                "summary": "Verify phone number",
-                "operationId": "40acad40e4b8728cf65108482bbe276e",
-                "parameters": [
-                    {
-                        "name": "Accept",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "default": "application/json"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "phone"
-                                ],
-                                "properties": {
-                                    "phone": {
-                                        "type": "integer"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Issue the token and return the current user info",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "example": {
-                                        "status": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/phone-auth/verify": {
-            "put": {
-                "tags": [
-                    "Login"
-                ],
-                "summary": "Verify otp",
-                "operationId": "2fb2d401000cea7834eebe69750709a7",
-                "parameters": [
-                    {
-                        "name": "Accept",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "default": "application/json"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "phone",
-                                    "otp"
-                                ],
-                                "properties": {
-                                    "phone": {
-                                        "type": "integer"
-                                    },
-                                    "otp": {
-                                        "type": "integer"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Issue the token and return the current user info",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "example": {
-                                        "status": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             }
         },
         "/api/payment/options": {
