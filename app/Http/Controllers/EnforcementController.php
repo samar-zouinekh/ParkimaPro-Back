@@ -13,6 +13,34 @@ use DateTimeZone;
 
 class EnforcementController extends Controller
 {
+    /**
+     * @OA\Get(
+     *      path="/api/get/products",
+     *      operationId="getEnforcementProducts",
+     *      tags={"Enforcement"},
+     *      security={{"bearerAuth": {}}},
+     *      summary="get enforcement products",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *           )
+     *        ),
+     * 
+     *     @OA\Response(
+     *         response="200",
+     *         description="get enforcement products",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
     public function getProduct(EnforcementRequest $request)
     {
         $product = app('db')->select(
@@ -27,6 +55,124 @@ class EnforcementController extends Controller
             'message' => "Done successfully."
         ];
     }
+
+      /**
+     * @OA\Post(
+     *      path="/api/make/enforcement",
+     *      operationId="makeEnforcement",
+     *      tags={"Enforcement"},
+     *      security={{"bearerAuth": {}}},
+     *      summary="make Enforcement",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     *      ),
+     * 
+     *      @OA\Parameter(
+     *          name="parking_id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer",
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="agent_name",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string",
+     *              default= "---"
+     *          )
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="type",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string",
+     *              default= "***"
+     *          )
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="gravity",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string",
+     *              default= "***"
+     *          )
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="cause",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string",
+     *              default= "***"
+     *          )
+     *      ),
+     * 
+     *
+     *      @OA\Parameter(
+     *          name="amount",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer",
+     *              default=00
+     *          )
+     *      ),
+     * 
+     *      @OA\Parameter(
+     *          name="license_plate",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     * 
+     *      @OA\Parameter(
+     *          name="phone_number",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     * 
+     *      @OA\Parameter(
+     *          name="enforced_car_picture",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer",
+     *              default="----"
+     *          )
+     *      ),
+     * 
+     * 
+     *     @OA\Response(
+     *         response="200",
+     *         description="make enforcement",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
+
     public function makeEnforcement(EnforcementRequest $request)
     {
         try {
@@ -183,6 +329,42 @@ class EnforcementController extends Controller
         }
     }
 
+     /**
+     * @OA\Get(
+     *      path="/api/check/enforcement",
+     *      operationId="checkEnforcement",
+     *      tags={"Enforcement"},
+     *      security={{"bearerAuth": {}}},
+     *      summary="check whether a given plate carries a penalty",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *           )
+     *        ),
+     *      @OA\Parameter(
+     *          name="enforced_license_plate",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string",
+     *          )
+     *      ),
+     *
+     *     @OA\Response(
+     *         response="200",
+     *         description="check whether a given plate carries a penalty",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
     public function checkEnforcement(EnforcementRequest $request)
     {
 
@@ -352,6 +534,61 @@ class EnforcementController extends Controller
 
 
 
+      /**
+     * @OA\Post(
+     *      path="/api/cashPay/enforcement",
+     *      operationId="payEnforcement",
+     *      tags={"Enforcement"},
+     *      security={{"bearerAuth": {}}},
+     *      summary="cash pay enforcement",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     *      ),
+     * 
+     *      @OA\Parameter(
+     *          name="parking_id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer",
+     *          )
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="enforced_license_plate",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string",
+     *          )
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="enforcement_reference",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer",
+     *          )
+     *      ),
+     *
+     *     @OA\Response(
+     *         response="200",
+     *         description="make enforcement",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
     public function cashPayEnforcement(EnforcementRequest $request)
     {
         $result = app('db')->select(

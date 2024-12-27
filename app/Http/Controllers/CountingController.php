@@ -7,6 +7,45 @@ use Illuminate\Http\Request;
 
 class CountingController extends Controller
 {
+
+    /**
+     * @OA\Get(
+     *      path="/api/get/counting",
+     *      operationId="getCounting",
+     *      tags={"Parking Availability"},
+     *      security={{"bearerAuth": {}}},
+     *      summary="get parking spots availability",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *           )
+     *        ),
+     * 
+     *      @OA\Parameter(
+     *          name="parking_id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *
+     *     @OA\Response(
+     *         response="200",
+     *         description="get parking spots availability",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
+
     public function getCounting(CountingRequest $request)
     {
         try {
@@ -58,6 +97,66 @@ class CountingController extends Controller
             ];
         }
     }
+
+
+  /**
+     * @OA\Post(
+     *      path="/api/edit/counting",
+     *      operationId="editParkingAvailability",
+     *      tags={"Parking Availability"},
+     *      security={{"bearerAuth": {}}},
+     *      summary="post Payment",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     *      ),
+     * 
+     *      @OA\Parameter(
+     *          name="parking_id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="free_spots",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="total_spots",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *
+     * 
+     *     @OA\Response(
+     *         response="200",
+     *         description="make post payment",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
+
+
     public function editCounting(CountingRequest $request)
     {
         try {
