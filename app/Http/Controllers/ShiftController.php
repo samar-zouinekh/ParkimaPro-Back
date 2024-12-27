@@ -9,6 +9,43 @@ use Illuminate\Http\Request;
 class ShiftController extends Controller
 {
 
+    /**
+     * @OA\Post(
+     *      path="/api/check/shift",
+     *      operationId="checkShift",
+     *      tags={"Shift Configuration"},
+     *      security={{"bearerAuth": {}}},
+     *      summary="check Shift",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     * ),
+     * 
+     *      @OA\Parameter(
+     *          name="parking_id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="check Shift",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
+
     public function checkShift(CountingRequest $request)
     {
         try {
@@ -68,6 +105,63 @@ class ShiftController extends Controller
         }
     }
 
+
+    /**
+     * @OA\Post(
+     *      path="/api/open/shift",
+     *      operationId="openShift",
+     *      tags={"Shift Configuration"},
+     *      security={{"bearerAuth": {}}},
+     *      summary="Open Shift",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     * ),
+     * 
+     *      @OA\Parameter(
+     *          name="parking_id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="starting_amount",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="check Shift",
+     *         @OA\JsonContent(
+     *                  @OA\Schema(
+     *                      example={
+     *                           "status": "string",
+     *                           "shift_id": "integer",
+     *                           "strat_shift_date": "datetime",
+     *                           "end_shift_date": "datetime",
+     *                           "total_revenue": "integer",
+     *                           "revenue_details": "string",
+     *                           "starting_amount": "integer",
+     *                           "total_amount": "integer",
+     *                       }
+     * ),
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
 
     public function openShift(ShiftRequest $request)
     {
@@ -193,6 +287,60 @@ class ShiftController extends Controller
             ];
         }
     }
+    
+    /**
+     * @OA\Post(
+     *      path="/api/close/shift",
+     *      operationId="closeShift",
+     *      tags={"Shift Configuration"},
+     *      security={{"bearerAuth": {}}},
+     *      summary="Close old Shift and open new one",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     * ),
+     * 
+     *      @OA\Parameter(
+     *          name="parking_id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="starting_amount",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="check Shift",
+     *         @OA\JsonContent(
+     *                      example={
+     *                           "shift_id": "integer",
+     *                           "strat_shift_date": "datetime",
+     *                           "end_shift_date": "datetime",
+     *                           "total_revenue": "integer",
+     *                           "revenue_details": "string",
+     *                           "starting_amount": "integer",
+     *                           "total_amount": "integer",
+     *                       },
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
 
     public function closeShift(ShiftRequest $request)
     {

@@ -171,6 +171,397 @@
                 }
             }
         },
+        "/api/payment/options": {
+            "get": {
+                "tags": [
+                    "Payment"
+                ],
+                "summary": " Get Payment Options",
+                "operationId": "paymentOption",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get Payment Options",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/payment": {
+            "post": {
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "post Payment",
+                "operationId": "makePostPayment",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "name": "parking_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "license_plate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "barcode",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ticket_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "provider",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "default": "cash_payment"
+                        }
+                    },
+                    {
+                        "name": "ticket_value",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "check Shift",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/prepayment": {
+            "post": {
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "post Payment",
+                "operationId": "makePrePayment",
+                "requestBody": {
+                    "description": "Station to create",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "parking_id",
+                                    "plate_info",
+                                    "license_plate",
+                                    "ticket_duration",
+                                    "phone_number"
+                                ],
+                                "properties": {
+                                    "parking_id": {
+                                        "type": "integer"
+                                    },
+                                    "plate_info": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "tn"
+                                                },
+                                                "background": {
+                                                    "type": "string",
+                                                    "example": "background"
+                                                },
+                                                "inputPartOne": {
+                                                    "type": "string",
+                                                    "example": "---"
+                                                },
+                                                "inputPartTwo": {
+                                                    "type": "string",
+                                                    "example": "----"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "default": [
+                                            {
+                                                "type": "tn",
+                                                "background": "background",
+                                                "inputPartOne": "---",
+                                                "inputPartTwo": "----"
+                                            }
+                                        ]
+                                    },
+                                    "license_plate": {
+                                        "type": "string"
+                                    },
+                                    "ticket_duration": {
+                                        "type": "integer"
+                                    },
+                                    "phone_number": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "check Shift",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/check/shift": {
+            "post": {
+                "tags": [
+                    "Shift Configuration"
+                ],
+                "summary": "check Shift",
+                "operationId": "checkShift",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "name": "parking_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "check Shift",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/open/shift": {
+            "post": {
+                "tags": [
+                    "Shift Configuration"
+                ],
+                "summary": "Open Shift",
+                "operationId": "openShift",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "name": "parking_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "starting_amount",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "check Shift",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/close/shift": {
+            "post": {
+                "tags": [
+                    "Shift Configuration"
+                ],
+                "summary": "Close old Shift and open new one",
+                "operationId": "closeShift",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "name": "parking_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "starting_amount",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "check Shift",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "shift_id": "integer",
+                                    "strat_shift_date": "datetime",
+                                    "end_shift_date": "datetime",
+                                    "total_revenue": "integer",
+                                    "revenue_details": "string",
+                                    "starting_amount": "integer",
+                                    "total_amount": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/entryTicket/create": {
             "get": {
                 "tags": [

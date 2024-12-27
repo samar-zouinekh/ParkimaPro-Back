@@ -30,33 +30,31 @@ Route::put('phone-auth/verify',  [LoginController::class, 'phoneVerify'])->witho
 
 
 Route::get('entryTicket/create',  [TicketController::class, 'entryTicket'])->withoutMiddleware(['auth:api']);
+Route::get('parkings',  [LoginController::class, 'getParkingOnStreetList'])->withoutMiddleware(['auth:api']);
 
-Route::middleware('auth:api')->group(function () {
+Route::get('ticket/consult',  [TicketController::class, 'consultTicket'])->withoutMiddleware(['auth:api']);
 
-    Route::get('parkings',  [LoginController::class, 'getParkingOnStreetList']);
+Route::get('payment/options',  [PaymentController::class, 'options'])->withoutMiddleware(['auth:api']);
+Route::post('payment',  [PaymentController::class, 'postPayment'])->withoutMiddleware(['auth:api']);
+Route::post('prepayment',  [PaymentController::class, 'prePayment'])->withoutMiddleware(['auth:api']);
+Route::post('extension',  [PaymentController::class, 'extension'])->withoutMiddleware(['auth:api']);
 
-    Route::get('ticket/consult',  [TicketController::class, 'consultTicket']);
-    
-    Route::get('payment/options',  [PaymentController::class, 'options']);
-    Route::post('payment',  [PaymentController::class, 'postPayment']);
-    Route::post('prepayment',  [PaymentController::class, 'prePayment']);
-    Route::post('extension',  [PaymentController::class, 'extension']);
+Route::post('check/shift',  [ShiftController::class, 'checkShift'])->withoutMiddleware(['auth:api']);
+Route::post('open/shift',  [ShiftController::class, 'openShift'])->withoutMiddleware(['auth:api']);
+Route::post('close/shift',  [ShiftController::class, 'closeShift'])->withoutMiddleware(['auth:api']);
 
-    Route::post('check/shift',  [ShiftController::class, 'checkShift']);
-    Route::post('open/shift',  [ShiftController::class, 'openShift']);
-    Route::post('close/shift',  [ShiftController::class, 'closeShift']);
+Route::get('get/counting',  [CountingController::class, 'getCounting'])->withoutMiddleware(['auth:api']);
+Route::post('edit/counting',  [CountingController::class, 'editCounting'])->withoutMiddleware(['auth:api']);
 
-    Route::get('get/counting',  [CountingController::class, 'getCounting']);
-    Route::post('edit/counting',  [CountingController::class, 'editCounting']);
+Route::get('get/plate/list',  [LicensePlateController::class, 'plateList'])->withoutMiddleware(['auth:api']);
+Route::get('get/plate',  [LicensePlateController::class, 'plateStatus'])->withoutMiddleware(['auth:api']);
 
-    Route::get('get/plate/list',  [LicensePlateController::class, 'plateList']);
-    Route::get('get/plate',  [LicensePlateController::class, 'plateStatus']);
+Route::get('get/products',  [EnforcementController::class, 'getProduct'])->withoutMiddleware(['auth:api']);
+Route::get('check/enforcement',  [EnforcementController::class, 'checkEnforcement'])->withoutMiddleware(['auth:api']);
+Route::post('make/enforcement',  [EnforcementController::class, 'makeEnforcement'])->withoutMiddleware(['auth:api']);
 
-    Route::get('get/products',  [EnforcementController::class, 'getProduct']);
-    Route::get('check/enforcement',  [EnforcementController::class, 'checkEnforcement']);
-    Route::post('make/enforcement',  [EnforcementController::class, 'makeEnforcement']);
-    
-    Route::post('pay/enforcement',  [EnforcementController::class, 'payEnforcement']);
-    Route::post('cashPay/enforcement',  [EnforcementController::class, 'cashPayEnforcement']);
+Route::post('pay/enforcement',  [EnforcementController::class, 'payEnforcement'])->withoutMiddleware(['auth:api']);
+Route::post('cashPay/enforcement',  [EnforcementController::class, 'cashPayEnforcement'])->withoutMiddleware(['auth:api']);
 
+Route::middleware('auth:api')->group(function () {   
 });

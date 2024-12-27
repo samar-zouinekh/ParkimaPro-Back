@@ -79,7 +79,7 @@ class LoginController extends Controller
      *     @OA\Response(
      *          response="200",
      *          description="Issue the token and return the current user info",
-     *         content={
+    *           content={
      *             @OA\MediaType(
      *                 mediaType="application/json",
      *                 @OA\Schema(

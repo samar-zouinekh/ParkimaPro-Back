@@ -14,7 +14,34 @@ use DateTimeZone;
 
 class PaymentController extends Controller
 {
-
+  /**
+     * @OA\Get(
+     *      path="/api/payment/options",
+     *      operationId="paymentOption",
+     *      tags={"Payment"},
+     *      security={{"bearerAuth": {}}},
+     *      summary=" Get Payment Options",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     * ),
+     * 
+     *     @OA\Response(
+     *         response="200",
+     *         description="Get Payment Options",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
     public function options()
     {
 
@@ -36,6 +63,90 @@ class PaymentController extends Controller
 
         return response()->json(compact('options'), 200);
     }
+   /**
+     * @OA\Post(
+     *      path="/api/payment",
+     *      operationId="makePostPayment",
+     *      tags={"Payment"},
+     *      security={{"bearerAuth": {}}},
+     *      summary="post Payment",
+     * 
+     *   @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="application/json"
+     *         )
+     *      ),
+     * 
+     *      @OA\Parameter(
+     *          name="parking_id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="license_plate",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="barcode",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="ticket_id",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     * 
+     *
+     *      @OA\Parameter(
+     *          name="provider",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer",
+     *              default="cash_payment",
+     *          )
+     *      ),
+     * 
+     *      @OA\Parameter(
+     *          name="ticket_value",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     * 
+     *     @OA\Response(
+     *         response="200",
+     *         description="check Shift",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
 
     public function postPayment(PaymentRequest $request)
     {
@@ -230,7 +341,64 @@ class PaymentController extends Controller
         }
     }
 
-
+  /**
+     * @OA\Post(
+     *      path="/api/prepayment",
+     *      operationId="makePrePayment",
+     *      tags={"Payment"},
+     *      security={{"bearerAuth": {}}},
+     *      summary="post Payment",
+     * 
+     *     @OA\RequestBody(
+     *     description="Station to create",
+     *     required=true,
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *            @OA\Schema(
+     *               type="object",
+     *               required={"parking_id",
+     *                         "plate_info",
+     *                         "license_plate",
+     *                         "ticket_duration",
+     *                         "phone_number"},
+     *               @OA\Property(property="parking_id", type="integer"),
+     *               @OA\Property(
+     *                    property="plate_info",
+     *                        type="array",
+     *                        @OA\Items(
+     *                          type="object",
+     *                          @OA\Property(property="type", type="string", example="tn"),
+     *                          @OA\Property(property="background", type="string", example="background"),
+     *                          @OA\Property(property="inputPartOne", type="string", example="---"),
+     *                          @OA\Property(property="inputPartTwo", type="string", example="----")
+     *                                ),
+     *                             default={
+     *                                  {
+     *                              "type": "tn",
+     *                              "background": "background",
+     *                              "inputPartOne": "---",
+     *                              "inputPartTwo": "----"
+     *                                       }
+     *                                   }
+     *                                  ),
+     *                 @OA\Property(property="license_plate", type="string"),
+     *               @OA\Property(property="ticket_duration", type="integer"),
+     *               @OA\Property(property="phone_number", type="integer"),
+     *            ),
+     *        ),
+     *    ),
+     *
+     *
+     *     @OA\Response(
+     *         response="200",
+     *         description="check Shift",
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized")
+     * )
+     */
     public function prePayment(TicketRequest $request)
     {
 
